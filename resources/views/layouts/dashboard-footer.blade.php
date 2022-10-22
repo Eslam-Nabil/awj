@@ -1,27 +1,3 @@
-            <!-- ============================================================== -->
-            <!-- footer -->
-            <!-- ============================================================== -->
-            <div class="footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                             Copyright © 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- ============================================================== -->
-            <!-- end footer -->
-            <!-- ============================================================== -->
-        </div>
-        <!-- ============================================================== -->
-        <!-- end wrapper  -->
-        <!-- ============================================================== -->
-    </div>
-    <!-- ============================================================== -->
-    <!-- end main wrapper  -->
-    <!-- ============================================================== -->
-    <!-- Optional JavaScript -->
     <!-- jquery 3.3.1 -->
     <script src="{{ asset('assets/vendor/jquery/jquery-3.3.1.min.js') }}"></script>
     <!-- bootstap bundle js -->
@@ -31,5 +7,20 @@
     <!-- main js -->
     <script src="{{ asset('assets/libs/js/main-js.js') }}"></script>
 </body>
-
 </html>
+<script>
+    var counter=0;
+    $( "#addrow" ).click(function() {
+        counter++;
+    $('#fields').append('<br><div class="col-xl-3 form-group"><label for="exampleInputEmail1">Member name</label><input type="text" name="member_name'+counter+'" class="form-control" id="member_name" placeholder="Member name"></div>');
+    $('#fields').append('<div class="col-xl-3 form-group"><label for="exampleInputEmail1">Job Title</label><input type="text" name="job_title'+counter+'" class="form-control" id="job_title" placeholder="Job Title"></div></div>');
+    $('#fields').append('<div class="col-xl-3 form-group"><label for="exampleInputEmail1">Picture</label><input type="file" name="picture'+counter+'" class="form-control" id="picture" placeholder="picture"></div></div>');
+    $('#fields').append('<button type="button" class="btn btn-default" data-dismiss="modal">Delete</button>');
+    });
+    $( "#deleterow" ).click(function() {
+        counter++;
+    $('#fields').
+    });
+    </script>
+
+
