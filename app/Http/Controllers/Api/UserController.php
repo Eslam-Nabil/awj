@@ -7,6 +7,8 @@ use Rules\Password;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,7 +21,8 @@ class UserController extends Controller
      */
     public function index()
     {
-
+        $allUsers=UserResource::collection(User::with('roles')->get());
+        return response()->json(['success' => true,'data'=>$allUsers], 200);
     }
 
     /**
@@ -27,9 +30,23 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function login(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email', 'exists:users,email'],
+            'password' => ['required', 'string'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 401);
+        }
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password],$remember)) {
+            $user=Auth::user();
+            $request->session()->regenerate();
+            return response()->json(['success' => true,'data'=>$success], 200);
+        }
+        else{
+
+        }
     }
 
     /**
@@ -77,7 +94,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user= new UserResource(User::where('id',$id)->with('roles')->first());
+        return response()->json(['success' => true,'data'=>$user], 200);
     }
 
     /**
@@ -111,7 +129,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+
 
     }
     public function test(Request $request)

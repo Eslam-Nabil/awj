@@ -20,3 +20,5 @@ use App\Http\Controllers\Api\UserController;
 
 Route::post('/test',[UserController::class,'test']);
 Route::post('/register',[UserController::class,'register']);
+Route::post('/login',[UserController::class,'login']);
+Route::get('/users',[UserController::class,'index']);
