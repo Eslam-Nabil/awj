@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Pages;
 use App\Models\HomePage;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class PagesController extends Controller
 {
@@ -13,11 +14,11 @@ class PagesController extends Controller
     }
     public function home(){
         $pagedata=Pages::where('slug','home')->first();
-        return view('pages.dashboard-home',compact('pagedata'));
+        return response()->json(['success' => true,'data'=>$pagedata], 200);
     }
 
     public function home_update( Request $request ){
-       $page = (Pages::where('slug','home')->first() ? : new Pages);
+        $page = (Pages::where('slug','home')->first() ? : new Pages);
         $page->page_name=$request->page_name;
         $page->slug=$request->slug;
         $page->slogan=$request->slogan;
@@ -29,19 +30,19 @@ class PagesController extends Controller
 
         if($request->hasFile('main_image_path')){
             $request->main_image_path->store('images', 'public');
-            $page->main_image_path=$request->main_image_path->hashName();
+            $page->main_image_path=asset($request->main_image_path->hashName());
         }
         if($request->hasFile('second_image_path')){
             $request->second_image_path->store('images', 'public');
-            $page->second_image_path=$request->second_image_path->hashName();
+            $page->second_image_path=asset($request->second_image_path->hashName());
         }
         $page->save();
-        return redirect()->route('home.index');
+        return response()->json(['success' => true,'data'=>$page], 200);
     }
 
     public function about(){
         $pagedata=Pages::where('slug','about-us')->first();
-        return view('pages\dashboard-about',compact('pagedata'));
+        return response()->json(['success' => true,'data'=>$pagedata], 200);
     }
 
     public function about_update( Request $request ){
@@ -57,14 +58,14 @@ class PagesController extends Controller
 
         if($request->hasFile('main_image_path')){
             $request->main_image_path->store('images', 'public');
-            $page->main_image_path=$request->main_image_path->hashName();
+            $page->main_image_path=asset($request->main_image_path->hashName());
         }
         if($request->hasFile('second_image_path')){
             $request->second_image_path->store('images', 'public');
-            $page->second_image_path=$request->second_image_path->hashName();
+            $page->second_image_path=asset($request->second_image_path->hashName());
         }
         $page->save();
-        return redirect()->route('about.index');
+        return response()->json(['success' => true,'data'=>$page], 200);
     }
 
     public function contact(){

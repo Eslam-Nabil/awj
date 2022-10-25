@@ -39,13 +39,13 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'success' => false], 401);
         }
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password],$remember)) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user=Auth::user();
-            $request->session()->regenerate();
-            return response()->json(['success' => true,'data'=>$success], 200);
+            $token = $user->createToken('logintoken')->accessToken;
+            return response()->json(['success' => true,'data'=>['token'=>$token,'user'=>$user]], 200);
         }
         else{
-
+            return response()->json(['message' => "Incorrect Details. Please try again", 'success' => false], 401);
         }
     }
 
@@ -80,7 +80,8 @@ class UserController extends Controller
         }else{
             $user->assignRole('author');
         }
-    }catch(Exception $e){
+        $token = $user->createToken('logintoken')->accessToken;
+    }catch(\Exception $e){
         return response()->json([ 'success' => false,'error'=>$e], 401);
     }
     return response()->json([ 'success' => true,'data'=>$user], 200);
