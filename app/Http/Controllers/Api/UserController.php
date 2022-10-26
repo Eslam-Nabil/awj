@@ -135,11 +135,10 @@ class UserController extends Controller
     }
     public function test(Request $request)
     {
-        $data="ssss";
+        $data=asset('images/');
 
-        $user=User::where('email',$request->email)->first();
-        $roles = $user->getRoleNames();
-        return response()->json(['status'=>'200','data'=>$roles]);
+
+        return response()->json(['status'=>'200','data'=>$data]);
 
     }
 }

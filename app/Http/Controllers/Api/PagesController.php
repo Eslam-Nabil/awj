@@ -29,12 +29,12 @@ class PagesController extends Controller
         $page->second_description=$request->second_description;
 
         if($request->hasFile('main_image_path')){
-            $request->main_image_path->store('images', 'public');
-            $page->main_image_path=asset($request->main_image_path->hashName());
+            $request->main_image_path->move(public_path('images'), $request->main_image_path->getClientOriginalName());
+            $page->main_image_path=asset('images/'.$request->main_image_path->getClientOriginalName());
         }
         if($request->hasFile('second_image_path')){
-            $request->second_image_path->store('images', 'public');
-            $page->second_image_path=asset($request->second_image_path->hashName());
+            $request->second_image_path->move(public_path('images'), $request->second_image_path->getClientOriginalName().time());
+            $page->second_image_path=asset('images/'.$request->second_image_path->getClientOriginalName());
         }
         $page->save();
         return response()->json(['success' => true,'data'=>$page], 200);
@@ -57,12 +57,16 @@ class PagesController extends Controller
         $page->second_description=$request->second_description;
 
         if($request->hasFile('main_image_path')){
-            $request->main_image_path->store('images', 'public');
-            $page->main_image_path=asset($request->main_image_path->hashName());
+            // $request->main_image_path->store('images', 'public');
+            $request->main_image_path->move(public_path('images'), $request->main_image_path->getClientOriginalName());
+            $page->main_image_path=asset('images/'.$request->main_image_path->getClientOriginalName());
+          //  dd($request);
+
         }
+
         if($request->hasFile('second_image_path')){
-            $request->second_image_path->store('images', 'public');
-            $page->second_image_path=asset($request->second_image_path->hashName());
+            $request->second_image_path->move(public_path('images'), $request->second_image_path->getClientOriginalName().time());
+            $page->second_image_path=asset('images/'.$request->second_image_path->getClientOriginalName());
         }
         $page->save();
         return response()->json(['success' => true,'data'=>$page], 200);
