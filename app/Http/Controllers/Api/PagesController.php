@@ -68,6 +68,6 @@ class PagesController extends Controller
             $page->second_image_path='images/'.$request->second_image_path->getClientOriginalName();
         }
         $page->save();
-        return response()->json(['success' => true,'data'=>$page], 200);
+        return response()->json(['success' => true,'data'=>'Updated successfully'], 200);
     }
 }

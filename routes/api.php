@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PagesController;
 use App\Http\Controllers\Api\AdditionalSectionController;
@@ -31,7 +32,12 @@ Route::group(['prefix'=>'admin'],function () {
 
     Route::post('/section/add',[AdditionalSectionController::class,'store']);
     Route::get('/section/delete/{id}',[AdditionalSectionController::class,'destroy']);
-    Route::post('/section/edit/{id}',[AdditionalSectionController::class,'edit']);
+    Route::post('/section/update/{id}',[AdditionalSectionController::class,'update']);
+
+    Route::get('/team/members',[TeamController::class,'index']);
+    Route::post('/team/add',[TeamController::class,'store']);
+    Route::get('/team/delete/{id}',[TeamController::class,'destroy']);
+    Route::post('/team/update/{id}',[TeamController::class,'update']);
 
     Route::get('/home',[PagesController::class,'home']);
     Route::post('/home/update',[PagesController::class,'home_update']);

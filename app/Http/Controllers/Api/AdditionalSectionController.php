@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
 use Illuminate\Http\Request;
 use App\Models\AdditionalSection;
 use App\Http\Controllers\Controller;
@@ -48,17 +49,18 @@ class AdditionalSectionController extends Controller
             $request->image_path->move(public_path('images'), $request->image_path->getClientOriginalName());
             $image_path='images/'.$request->image_path->getClientOriginalName();
         }
+        try{
         $section = AdditionalSection::create([
             'title' => $request->title,
             'description' => $request->description,
             'image_path'=> (!empty($image_path) ?  $image_path : null ),
             'pages_id'=>$request->page_id
         ]);
-        if($section){
-            return response()->json(['success' => true,'message'=>"Section added successfully"], 200);
-        }else{
-            return response()->json(['success' => false,'message'=>"There is something wrong","error"=>$section], 500);
+        }catch(Exception $e){
+            return response()->json(['success' => false,'message'=>"There is something wrong","error"=>$e->getMessage()], 401);
         }
+
+        return response()->json(['success' => true,'message'=>"Section added successfully"], 200);
     }
 
     /**
@@ -80,7 +82,18 @@ class AdditionalSectionController extends Controller
      */
     public function edit(Request $request,$id)
     {
-        $section=AdditionalSection::find($id);
+
+    }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\AdditionalSection  $additionalSection
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+          $section=AdditionalSection::find($id);
 
         if($section){
             if($request->hasFile('image_path')){
@@ -92,22 +105,11 @@ class AdditionalSectionController extends Controller
                 $section->image_path =(!empty($image_path) ?  $image_path : null );
                 $section->save();
         }else{
-            return response()->json(['status'=>'401','message'=>"section is not found"]);
+            return response()->json(['success'=>false,'message'=>"section not found"],401);
         }
-        return response()->json(['status'=>'200','message'=>"section updated deleted successfully"]);
+            return response()->json(['success'=>true ,'message'=>"section updated deleted successfully"],200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\AdditionalSection  $additionalSection
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, AdditionalSection $additionalSection)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -121,9 +123,9 @@ class AdditionalSectionController extends Controller
         if($section){
             $section->delete();
         }else{
-            return response()->json(['status'=>'401','message'=>"section is not found"]);
+            return response()->json(['success'=>false,'message'=>"section is not found"],401);
         }
-        return response()->json(['status'=>'200','message'=>"section deleted successfully"]);
+        return response()->json(['success'=>true,'message'=>"section deleted successfully"],200);
 
     }
 }
