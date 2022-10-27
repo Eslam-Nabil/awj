@@ -8,6 +8,7 @@ use App\Models\HomePage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PageResource;
+use App\Http\Resources\TeamResource;
 
 class PagesController extends Controller
 {
