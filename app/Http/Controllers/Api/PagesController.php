@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Team;
 use App\Models\Pages;
 use App\Models\HomePage;
 use Illuminate\Http\Request;
@@ -42,7 +43,8 @@ class PagesController extends Controller
     }
 
     public function about(){
-        $page_data=new PageResource(Pages::where('slug','about-us')->with('additional_section')->first());
+        $page_data['about_page']=new PageResource(Pages::where('slug','about-us')->with('additional_section')->first());
+        $page_data['team']=TeamResource::collection(Team::all());
         return response()->json(['success' => true,'data'=>$page_data], 200);
     }
 
