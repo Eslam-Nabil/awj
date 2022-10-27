@@ -87,10 +87,10 @@ class AdditionalSectionController extends Controller
                 $request->image_path->move(public_path('images'), $request->image_path->getClientOriginalName());
                 $image_path='images/'.$request->image_path->getClientOriginalName();
             }
-            $section->title=$request->title;
-            $section->description=$request->description;
-            $section->image_path =(!empty($image_path) ?  $image_path : null );
-            $section->save();
+                $section->title=$request->title;
+                $section->description=$request->description;
+                $section->image_path =(!empty($image_path) ?  $image_path : null );
+                $section->save();
         }else{
             return response()->json(['status'=>'401','message'=>"section is not found"]);
         }
