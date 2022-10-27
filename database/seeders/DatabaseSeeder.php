@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\PagesSeeder;
 use Database\Seeders\PermissionRoleSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionRoleSeeder::class,
             UserSeeder::class,
+            PagesSeeder::class
         ]);
     }
 }

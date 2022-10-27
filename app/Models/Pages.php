@@ -9,7 +9,11 @@ class Pages extends Model
 {
     use HasFactory;
 
-    protected $guarded=[];
+    protected $table    = 'pages';
+    protected $guarded  = [];
 
-    
+    public function additional_section()
+    {
+        return $this->hasMany(AdditionalSection::class);
+    }
 }

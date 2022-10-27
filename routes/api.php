@@ -3,6 +3,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PagesController;
+use App\Http\Controllers\Api\AdditionalSectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +25,19 @@ Route::post('/register',[UserController::class,'register']);
 Route::post('/login',[UserController::class,'login']);
 
 Route::group(['prefix'=>'admin'],function () {
+
+    Route::get('/user/delete/{id}',[UserController::class,'destroy']);
     Route::get('/users',[UserController::class,'index']);
+
+    Route::post('/section/add',[AdditionalSectionController::class,'store']);
+    Route::get('/section/delete/{id}',[AdditionalSectionController::class,'destroy']);
+    Route::post('/section/edit/{id}',[AdditionalSectionController::class,'edit']);
+
     Route::get('/home',[PagesController::class,'home']);
     Route::post('/home/update',[PagesController::class,'home_update']);
+
     Route::get('/about',[PagesController::class,'about']);
     Route::post('/about/update',[PagesController::class,'about_update']);
+    Route::post('/team/update',[PagesController::class,'about_update']);
+
 });
