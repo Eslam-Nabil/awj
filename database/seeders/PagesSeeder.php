@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Pages;
 use Illuminate\Database\Seeder;
 
 class PagesSeeder extends Seeder
