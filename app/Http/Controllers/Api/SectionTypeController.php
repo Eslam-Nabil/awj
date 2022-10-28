@@ -15,7 +15,7 @@ class SectionTypeController extends Controller
      */
     public function index()
     {
-        $types=SectionType::all();
+        $types= TypeResource::collection(SectionType::all());
         return response()->json(['success' => true,'data'=>$types], 200);
     }
 
