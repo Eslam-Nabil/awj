@@ -86,7 +86,7 @@ class UserController extends Controller
     }catch(\Exception $e){
         return response()->json([ 'success' => false,'error'=>$e], 401);
     }
-    return response()->json([ 'success' => true,'data'=>$user], 200);
+    return response()->json([ 'success' => true,'data'=>UserResource::collection($user)], 200);
 }
 
     /**

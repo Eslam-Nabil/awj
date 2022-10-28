@@ -53,7 +53,7 @@ class TeamController extends Controller
             $picture_path='images/'.$request->picture_path->getClientOriginalName();
         }
         try{
-            Team::create([
+            $team=Team::create([
                 'name' => $request->name,
                 'job_title' => $request->job_title,
                 'picture_path'=> (!empty($picture_path) ?  $picture_path : null ),
@@ -61,7 +61,7 @@ class TeamController extends Controller
         }catch(Exception $e){
             return response()->json(['success' => false,'message'=>"There is something wrong",'error'=>$e->getMessage()], 500);
         }
-            return response()->json(['success' => true,'message'=>"Team Member added successfully"], 200);
+            return response()->json(['success' => true,'message'=>"Team Member added successfully",'data'=>TeamResource::collection($team)], 200);
     }
 
     /**
@@ -109,7 +109,7 @@ class TeamController extends Controller
         }else{
             return response()->json(['success'=>false ,'message'=>"Team Member not found"],401);
         }
-            return response()->json(['success'=>true , 'message'=>"Team Member updated deleted successfully"],200);
+            return response()->json(['success'=>true , 'message'=>"Team Member updated deleted successfully","data"=>$member],200);
     }
 
     /**
