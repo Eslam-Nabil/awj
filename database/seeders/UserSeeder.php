@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
                 'name' => 'Awj Admin',
                 'email' => 'admin@awj-p.com',
                 'phone' => '01111111111',
+                'emirateid' => '0000',
                 'password' => Hash::make('admin_123123')
             ]);
             $user->assignRole('admin');

@@ -1,4 +1,5 @@
 <?php
+use App\Models\SectionType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TeamController;
@@ -45,5 +46,7 @@ Route::group(['prefix'=>'admin'],function () {
     Route::get('/about',[PagesController::class,'about']);
     Route::post('/about/update',[PagesController::class,'about_update']);
     Route::post('/team/update',[PagesController::class,'about_update']);
+
+    Route::get('/types',[SectionType::class,'index']);
 
 });

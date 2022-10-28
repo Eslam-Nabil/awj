@@ -14,13 +14,12 @@ class PagesSeeder extends Seeder
      */
     public function run()
     {
-        $page = Pages::create([
-            'page_name' => 'Home',
-            'slug' => 'home',
-        ]);
-        $page = Pages::create([
-            'page_name' => 'about',
-            'slug' => 'about-us',
-        ]);
-    }
+        $pages=['home','about us'];
+        foreach($pages as $page){
+            Pages::create([
+                'page_name' =>$page ,
+                'slug' => str_replace(' ','-',$page),
+            ]);
+       }
+}
 }

@@ -40,6 +40,7 @@ class AdditionalSectionController extends Controller
     {
         $validator=Validator::make($request->all(),[
             'page_id' =>'required|integer',
+            'type_id' =>'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'success' => false], 401);
