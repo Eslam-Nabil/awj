@@ -61,6 +61,7 @@ class UserController extends Controller
             'name' =>'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'required|numeric|digits:10|unique:users',
+            'emirateid' => 'required',
             'birthdate' => 'required|date',
             'password' =>'required|confirmed|min:6',
         ]);
@@ -72,6 +73,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone'=>$request->phone,
+            'emirateid'=>$request->emirateid,
             'birthdate'=>$request->birthdate,
             'password' => Hash::make($request->password),
         ]);
