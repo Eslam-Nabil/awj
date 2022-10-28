@@ -15,7 +15,7 @@ class PagesController extends Controller
     public function index(){
         return view('dashboard');
     }
-    
+
     public function home(){
         $page_data=new PageResource(Pages::where('slug','home')->with('additional_section')->first());
         return response()->json(['success' => true,'data'=>$page_data], 200);

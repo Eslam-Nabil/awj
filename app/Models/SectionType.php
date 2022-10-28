@@ -13,7 +13,7 @@ class SectionType extends Model
 
     public function additional_section()
     {
-        return $this->hasMany(AdditionalSection::class);
+        return $this->hasMany(AdditionalSection::class,'section_types_id');
     }
 
 }

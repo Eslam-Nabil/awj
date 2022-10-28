@@ -25,7 +25,8 @@ class PageResource extends JsonResource
         'second_image_path'=>$this->second_image_path,
         'main_description'=>$this->main_description,
         'second_description'=>$this->second_description,
-        'sections'=>($this->additional_section ? SectionResource::collection($this->additional_section) : null )
+        'sections'=>($this->additional_section ? SectionResource::collection($this->additional_section) : null ),
+        //'type'=>($this->additional_section->type ? $this->additional_section : null )
        ];
     }
 }

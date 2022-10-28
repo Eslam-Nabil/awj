@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\SectionType;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SectionResource extends JsonResource
@@ -18,7 +19,8 @@ class SectionResource extends JsonResource
             'id'=>$this->id,
             'title'=>$this->title,
             'description'=>$this->description,
-            'image'=>($this->image_path ? asset($this->image_path) : null )
+            'image'=>($this->image_path ? asset($this->image_path) : null ),
+            'section_type'=>new TypeResource(SectionType::find($this->section_types_id))
         ];
     }
 }

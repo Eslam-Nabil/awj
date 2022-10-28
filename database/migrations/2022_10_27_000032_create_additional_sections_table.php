@@ -18,7 +18,6 @@ class CreateAdditionalSectionsTable extends Migration
             $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->string('image_path')->nullable();
-            $table->string('section_type');
             $table->integer('pages_id');
             $table->integer('section_types_id');
             $table->timestamps();

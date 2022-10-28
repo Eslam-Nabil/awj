@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Models\AdditionalSection;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SectionResource;
 use Illuminate\Support\Facades\Validator;
 
 class AdditionalSectionController extends Controller
@@ -17,7 +18,9 @@ class AdditionalSectionController extends Controller
      */
     public function index()
     {
-
+        $sections=AdditionalSection::first();
+        $sections->type;
+        return response()->json(['success' => true,'data'=>$sections->type], 200);
     }
 
     /**
@@ -55,7 +58,8 @@ class AdditionalSectionController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'image_path'=> (!empty($image_path) ?  $image_path : null ),
-            'pages_id'=>$request->page_id
+            'pages_id'=>$request->page_id,
+            'section_types_id'=>$request->type_id,
         ]);
         }catch(Exception $e){
             return response()->json(['success' => false,'message'=>"There is something wrong","error"=>$e->getMessage()], 401);
