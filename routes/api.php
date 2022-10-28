@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PagesController;
+use App\Http\Controllers\Api\SectionTypeController;
 use App\Http\Controllers\Api\AdditionalSectionController;
 
 /*
