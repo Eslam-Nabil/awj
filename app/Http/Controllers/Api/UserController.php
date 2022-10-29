@@ -42,7 +42,7 @@ class UserController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user=Auth::user();
             $token = $user->createToken('logintoken')->accessToken;
-            return response()->json(['success' => true,'data'=>['token'=>$token,'user'=>$user]], 200);
+            return response()->json(['success' => true,'data'=>['token'=>$token,'user'=>UserResource::collection($user)]], 200);
         }
         else{
             return response()->json(['message' => "Incorrect Details. Please try again", 'success' => false], 401);
