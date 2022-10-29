@@ -39,7 +39,7 @@ class SectionTypeController extends Controller
     public function store(Request $request)
     {
         $section = SectionType::create([
-            'name' => $request->name
+            'type_name' => $request->name
         ]);
         return response()->json(['success' => true,'message'=>"type added successfully"], 200);
     }
