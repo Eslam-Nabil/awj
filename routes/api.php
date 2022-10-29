@@ -49,6 +49,7 @@ Route::group(['prefix'=>'admin'],function () {
     Route::post('/team/update',[PagesController::class,'about_update']);
 
     Route::get('/types',[SectionTypeController::class,'index']);
+    Route::post('/types/add',[SectionTypeController::class,'store']);
     Route::get('/sections',[AdditionalSectionController::class,'index']);
 
 });
