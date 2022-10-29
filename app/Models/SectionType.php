@@ -10,6 +10,8 @@ class SectionType extends Model
 {
     use HasFactory;
     protected $table ='section_types';
+    protected $guarded  = [];
+
 
     public function additional_section()
     {
