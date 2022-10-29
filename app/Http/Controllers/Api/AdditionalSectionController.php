@@ -64,7 +64,7 @@ class AdditionalSectionController extends Controller
         }catch(Exception $e){
             return response()->json(['success' => false,'message'=>"There is something wrong","error"=>$e->getMessage()], 401);
         }
-        return response()->json(['success' => true,'message'=>"Section added successfully",'data'=>SectionResource::collection($section)], 200);
+        return response()->json(['success' => true,'message'=>"Section added successfully",'data'=>new SectionResource($section)], 200);
     }
 
     /**
