@@ -61,7 +61,7 @@ class TeamController extends Controller
         }catch(Exception $e){
             return response()->json(['success' => false,'message'=>"There is something wrong",'error'=>$e->getMessage()], 500);
         }
-            return response()->json(['success' => true,'message'=>"Team Member added successfully",'data'=>TeamResource::collection($team)], 200);
+            return response()->json(['success' => true,'message'=>"Team Member added successfully",'data'=>new TeamResource($team)], 200);
     }
 
     /**
