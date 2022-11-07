@@ -15,13 +15,14 @@ class PermissionRoleSeeder extends Seeder
      */
     public function run()
     {
-        Permission::create(['name' => 'create-article-posts']);
-        Permission::create(['name' => 'edit-article-posts']);
-        Permission::create(['name' => 'view-article-posts']);
-        Permission::create(['name' => 'delete-article-posts']);
-        Permission::create(['name' => 'create-user']);
-        Permission::create(['name' => 'edit-user']);
-        Permission::create(['name' => 'delete-user']);
+        $models=['user','article','type','section','category','team'];
+        foreach ($models as $key => $model) {
+            Permission::create(['name' => 'create.'.$model]);
+            Permission::create(['name' => 'edit.'.$model]);
+            Permission::create(['name' => 'view.'.$model]);
+            Permission::create(['name' => 'delete.'.$model]);
+        }
+        Permission::create(['name' => 'approve.article']);
 
         $publisher_role=Role::create(['name' => 'publisher']);
         $author_role=   Role::create(['name' => 'author']);
@@ -29,19 +30,13 @@ class PermissionRoleSeeder extends Seeder
         $admin_role =   Role::create(['name' => 'admin']);
         $student_role=  Role::create(['name' => 'student']);
 
-        $admin_role->givePermissionTo([
-            'create-user',
-            'edit-user',
-            'delete-user',
-            'create-article-posts',
-            'edit-article-posts',
-            'delete-article-posts',
-        ]);
+        $admin_role->givePermissionTo(Permission::all());
         $publisher_role->givePermissionTo([
-            'view-article-posts',
+            'view.article',
+            'approve.article'
         ]);
         $reviewer_role->givePermissionTo([
-            'view-article-posts',
+            'view.article',
         ]);
 
 

@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PagesSeeder::class,
             TypeSeeder::class,
+            LanguagesSeeder::class,
         ]);
     }
 }

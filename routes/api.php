@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PagesController;
+use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\SectionTypeController;
 use App\Http\Controllers\Api\AdditionalSectionController;
 
@@ -51,5 +52,6 @@ Route::group(['prefix'=>'admin'],function () {
     Route::get('/types',[SectionTypeController::class,'index']);
     Route::post('/types/add',[SectionTypeController::class,'store']);
     Route::get('/sections',[AdditionalSectionController::class,'index']);
+    Route::get('/languages',[LanguageController::class,'index']);
 
 });
