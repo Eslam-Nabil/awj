@@ -41,26 +41,30 @@ class TeamController extends Controller
      */
     public function store(Request $request)
     {
-        $validator=Validator::make($request->all(),[
-            'name' =>'required|string',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'success' => false], 401);
-        }
-
+        $data=$request->all();
         if($request->hasFile('picture_path')){
             $request->picture_path->move(public_path('images'), $request->picture_path->getClientOriginalName());
             $picture_path='images/'.$request->picture_path->getClientOriginalName();
         }
-        try{
-            $team=Team::create([
-                'name' => $request->name,
-                'job_title' => $request->job_title,
-                'picture_path'=> (!empty($picture_path) ?  $picture_path : null ),
-            ]);
-        }catch(Exception $e){
-            return response()->json(['success' => false,'message'=>"There is something wrong",'error'=>$e->getMessage()], 500);
-        }
+        $picture_path= (!empty($picture_path) ?  $picture_path : null );
+        $data['picture_path']=$picture_path;
+        $team=Team::create($data);
+        // $validator=Validator::make($request->all(),[
+        //     'name' =>'required|string',
+        // ]);
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->errors(), 'success' => false], 401);
+        // }
+
+        // try{
+        //     $team=Team::create([
+        //         'name' => $request->name,
+        //         'job_title' => $request->job_title,
+        //         'picture_path'=> (!empty($picture_path) ?  $picture_path : null ),
+        //     ]);
+        // }catch(Exception $e){
+        //     return response()->json(['success' => false,'message'=>"There is something wrong",'error'=>$e->getMessage()], 500);
+        // }
             return response()->json(['success' => true,'message'=>"Team Member added successfully",'data'=>new TeamResource($team)], 200);
     }
 
@@ -96,20 +100,20 @@ class TeamController extends Controller
     public function update(Request $request, $id)
     {
         $member=Team::find($id);
-
+        $data=$request->all();
         if($member){
             if($request->hasFile('picture_path')){
                 $request->picture_path->move(public_path('images'), $request->picture_path->getClientOriginalName());
                 $picture_path='images/'.$request->picture_path->getClientOriginalName();
             }
-                $member->name=$request->name;
-                $member->job_title=$request->job_title;
-                $member->picture_path =(!empty($picture_path) ?  $picture_path : null );
-                $member->save();
+            $picture_path= (!empty($picture_path) ?  $picture_path : null );
+            $data['picture_path']=$picture_path;
+            $member->update($data);
+
         }else{
             return response()->json(['success'=>false ,'message'=>"Team Member not found"],401);
         }
-            return response()->json(['success'=>true , 'message'=>"Team Member updated deleted successfully","data"=>$member],200);
+            return response()->json(['success'=>true , 'message'=>"Team Member updated successfully","data"=>new TeamResource($member)],200);
     }
 
     /**
