@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
 use App\Models\Team;
 use App\Models\Pages;
 use App\Models\HomePage;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\TeamResource;
+use Astrotomic\Translatable\Validation\RuleFactory;
 
 class PagesController extends Controller
 {
@@ -17,61 +19,67 @@ class PagesController extends Controller
     }
 
     public function home(){
-        $page_data=new PageResource(Pages::where('slug','home')->with('additional_section')->first());
+        $page_data=new PageResource(Pages::where('id',1)->with('additional_section')->first());
         return response()->json(['success' => true,'data'=>$page_data], 200);
     }
 
     public function home_update( Request $request ){
-        $page = (Pages::where('slug','home')->first() ? : new Pages);
-        $page->page_name=$request->page_name;
-        $page->slug=$request->slug;
-        $page->slogan=$request->slogan;
-        $page->main_title=$request->main_title;
-        $page->meta_title=$request->meta_title;
-        $page->meta_description=$request->meta_description;
-        $page->main_description=$request->main_description;
-        $page->second_description=$request->second_description;
+        // dd($request->all());
+        $data=$request->all();
+        $page = (Pages::where('id',1)->first() ? Pages::where('id',1)->first() : new Pages);
 
         if($request->hasFile('main_image_path')){
             $request->main_image_path->move(public_path('images'), $request->main_image_path->getClientOriginalName());
-            $page->main_image_path='images/'.$request->main_image_path->getClientOriginalName();
+            $main_image_path='images/'.$request->main_image_path->getClientOriginalName();
         }
+        $data['main_image_path']= (!empty($main_image_path) ?  $main_image_path : null );
+
         if($request->hasFile('second_image_path')){
             $request->second_image_path->move(public_path('images'), $request->second_image_path->getClientOriginalName().time());
-            $page->second_image_path='images/'.$request->second_image_path->getClientOriginalName();
+            $second_image_path='images/'.$request->second_image_path->getClientOriginalName();
         }
-        $page->save();
-        return response()->json(['success' => true,'data'=>$page], 200);
+        $data['second_image_path']= (!empty($second_image_path) ?  $second_image_path : null );
+
+        try{
+        $page->update($data);
+        }catch(Exception $e){
+            return response()->json(['success' => false,'error'=>$e->getMessages()], 500);
+        }
+        return response()->json(['success' => true,'data'=>new PageResource($page)], 200);
     }
 
     public function about(){
-        $page_data['about_page']=new PageResource(Pages::where('slug','about-us')->with('additional_section')->first());
+        $page_data['about_page']=new PageResource(Pages::where('id',2)->with('additional_section')->first());
         $page_data['team']=TeamResource::collection(Team::all());
         return response()->json(['success' => true,'data'=>$page_data], 200);
     }
 
     public function about_update( Request $request ){
-        $page = (Pages::where('slug','about-us')->first() ? : new Pages);
-        $page->page_name=$request->page_name;
-        $page->slug=$request->slug;
-        $page->slogan=$request->slogan;
-        $page->main_title=$request->main_title;
-        $page->meta_title=$request->meta_title;
-        $page->meta_description=$request->meta_description;
-        $page->main_description=$request->main_description;
-        $page->second_description=$request->second_description;
+            $rules = RuleFactory::make([
+                '%page_name%' => 'required|string',
+            ]);
 
-        if($request->hasFile('main_image_path')){
-            // $request->main_image_path->store('images', 'public');
-            $request->main_image_path->move(public_path('images'), $request->main_image_path->getClientOriginalName());
-            $page->main_image_path='images/'.$request->main_image_path->getClientOriginalName();
-          //  dd($request);
-        }
-        if($request->hasFile('second_image_path')){
-            $request->second_image_path->move(public_path('images'), $request->second_image_path->getClientOriginalName().time());
-            $page->second_image_path='images/'.$request->second_image_path->getClientOriginalName();
-        }
-        $page->save();
-        return response()->json(['success' => true,'data'=>'Updated successfully'], 200);
+            // $validatedData = $request->validate($rules);
+
+            $data=$request->all();
+            $page = (Pages::where('id',2)->first() ? Pages::where('id',2)->first() : new Pages);
+
+            if($request->hasFile('main_image_path')){
+                $request->main_image_path->move(public_path('images'), $request->main_image_path->getClientOriginalName());
+                $main_image_path='images/'.$request->main_image_path->getClientOriginalName();
+            }
+            $data['main_image_path']= (!empty($main_image_path) ?  $main_image_path : null );
+
+            if($request->hasFile('second_image_path')){
+                $request->second_image_path->move(public_path('images'), $request->second_image_path->getClientOriginalName().time());
+                $second_image_path='images/'.$request->second_image_path->getClientOriginalName();
+            }
+            $data['second_image_path']= (!empty($second_image_path) ?  $second_image_path : null );
+            try{
+                $page->update($data);
+                }catch(Exception $e){
+                    return response()->json(['success' => false,'error'=>$e->getMessages()], 500);
+                }
+            return response()->json(['success' => true,'data'=>new PageResource($page)], 200);
     }
 }
