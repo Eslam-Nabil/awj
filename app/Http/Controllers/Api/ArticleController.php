@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ArticleResource;
 use Astrotomic\Translatable\Validation\RuleFactory;
+use Exception;
 
 class ArticleController extends Controller
 {
@@ -77,7 +78,7 @@ class ArticleController extends Controller
         try{
              $article=Article::create($data);
         }catch(Exception $e){
-               return response()->json(['success' => false,'error'=>$e->getMessages()], 500);
+               return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
             }
         return response()->json(['success' => true,'data'=>new ArticleResource($article)], 200);
     }

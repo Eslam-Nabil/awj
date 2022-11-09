@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
@@ -52,7 +53,7 @@ class CommentController extends Controller
         try{
             $comment=Comment::create($data);
         }catch(Exception $e){
-               return response()->json(['success' => false,'error'=>$e->getMessages()], 500);
+               return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
             }
         return response()->json(['success' => true,'data'=>$comment], 200);
     }
