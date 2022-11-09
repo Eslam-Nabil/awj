@@ -21,5 +21,5 @@ class PagesSeeder extends Seeder
                 'slug' => str_replace(' ','-',$page),
             ]);
        }
-}
+    }
 }
