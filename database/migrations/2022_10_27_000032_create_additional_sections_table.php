@@ -14,13 +14,20 @@ class CreateAdditionalSectionsTable extends Migration
     public function up()
     {
         Schema::create('additional_sections', function (Blueprint $table) {
-            $table->id();
-            $table->string('title')->nullable();
-            $table->text('description')->nullable();
+            $table->increments('id');
             $table->string('image_path')->nullable();
             $table->integer('pages_id');
             $table->integer('section_types_id');
             $table->timestamps();
+        });
+        Schema::create('additional_section_translations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('section_id')->unsigned();
+            $table->string('locale')->index();
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
+            $table->unique(['section_id','locale']);
+            $table->foreign('section_id')->references('id')->on('additional_sections')->onDelete('cascade');
         });
     }
 

@@ -5,11 +5,14 @@ namespace App\Models;
 use App\Models\SectionType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 
-class AdditionalSection extends Model
+class AdditionalSection extends Model implements TranslatableContract
 {
-    use HasFactory;
-    protected $guarded = [];
+    use Translatable,HasFactory;
+    public $translatedAttributes = ['title', 'description'];
+    protected $fillable = ['image_path'];
 
     public function page()
     {

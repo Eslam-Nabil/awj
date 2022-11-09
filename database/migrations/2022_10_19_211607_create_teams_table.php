@@ -14,11 +14,18 @@ class CreateTeamsTable extends Migration
     public function up()
     {
         Schema::create('teams', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('job_title')->nullable();
+            $table->increments('id');
             $table->string('picture_path')->nullable();
             $table->timestamps();
+        });
+        Schema::create('team_translations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('team_id')->unsigned();
+            $table->string('locale')->index();
+            $table->string('name');
+            $table->string('job_title')->nullable();
+            $table->unique(['team_id','locale']);
+            $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
         });
     }
 
@@ -29,6 +36,7 @@ class CreateTeamsTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('team_translations');
         Schema::dropIfExists('teams');
     }
 }

@@ -14,18 +14,25 @@ class CreatePagesTable extends Migration
     public function up()
     {
         Schema::create('pages', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->string('main_image_path')->nullable();
+            $table->string('second_image_path')->nullable();
+            $table->timestamps();
+        });
+        Schema::create('page_translations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('pages_id')->unsigned();
+            $table->string('locale')->index();
             $table->string('page_name');
             $table->string('slug');
             $table->string('main_title')->nullable();
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();
             $table->string('slogan')->nullable();
-            $table->string('main_image_path')->nullable();
-            $table->string('second_image_path')->nullable();
             $table->text('main_description')->nullable();
             $table->text('second_description')->nullable();
-            $table->timestamps();
+            $table->unique(['pages_id','locale']);
+            $table->foreign('pages_id')->references('id')->on('pages')->onDelete('cascade');
         });
     }
 

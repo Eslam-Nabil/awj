@@ -16,14 +16,17 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->integer('category_id');
             $table->string('article_file_path');
             $table->string('audio_file_path');
             $table->string('cover_file_path');
             $table->float('price');
+            $table->integer('category_id');
+            $table->string('status');
+            $table->boolean('isApproved')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
+
         Schema::create('article_translations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('article_id')->unsigned();
@@ -42,7 +45,7 @@ class CreateArticlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articles');
         Schema::dropIfExists('article_translations');
+        Schema::dropIfExists('articles');
     }
 }

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PagesController;
+use App\Http\Controllers\Api\ArticleController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\SectionTypeController;
 use App\Http\Controllers\Api\AdditionalSectionController;
@@ -54,4 +56,12 @@ Route::group(['prefix'=>'admin'],function () {
     Route::get('/sections',[AdditionalSectionController::class,'index']);
     Route::get('/languages',[LanguageController::class,'index']);
 
+});
+Route::group(['prefix'=>'article'],function () {
+    Route::post('/',[ArticleController::class,'index']);
+    Route::post('/add',[ArticleController::class,'store']);
+});
+Route::group(['prefix'=>'comment'],function () {
+    Route::post('/',[CommentController::class,'index']);
+    Route::post('/add',[CommentController::class,'store']);
 });

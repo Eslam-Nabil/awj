@@ -4,9 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 
-class Team extends Model
+class Team extends Model implements TranslatableContract
 {
-    use HasFactory;
-    protected $guarded=[];
+    use Translatable,HasFactory;
+    
+    public $translatedAttributes = ['name', 'job_title'];
+    protected $fillable = ['picture_path'];
 }
