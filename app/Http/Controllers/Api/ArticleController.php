@@ -18,9 +18,9 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($lang)
+    public function index()
     {
-        App::setLocale($lang);
+       
         $articles = ArticleResource::collection(Article::get());
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
