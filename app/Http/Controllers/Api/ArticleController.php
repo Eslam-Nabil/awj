@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ArticleResource;
 use Astrotomic\Translatable\Validation\RuleFactory;
+use Exception;
 
 class ArticleController extends Controller
 {
