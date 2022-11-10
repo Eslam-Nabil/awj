@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CommentsResource;
 use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
