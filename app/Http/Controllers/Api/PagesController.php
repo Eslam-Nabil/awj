@@ -43,7 +43,7 @@ class PagesController extends Controller
         try{
         $page->update($data);
         }catch(Exception $e){
-            return response()->json(['success' => false,'error'=>$e->getMessages()], 500);
+            return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
         }
         return response()->json(['success' => true,'data'=>new PageResource($page)], 200);
     }
@@ -78,7 +78,7 @@ class PagesController extends Controller
             try{
                 $page->update($data);
                 }catch(Exception $e){
-                    return response()->json(['success' => false,'error'=>$e->getMessages()], 500);
+                    return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
                 }
             return response()->json(['success' => true,'data'=>new PageResource($page)], 200);
     }

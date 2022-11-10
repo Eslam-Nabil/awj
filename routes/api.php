@@ -58,10 +58,10 @@ Route::group(['prefix'=>'admin'],function () {
 
 });
 Route::group(['prefix'=>'article'],function () {
-    Route::post('/',[ArticleController::class,'index']);
+    Route::get('/{lang}',[ArticleController::class,'index']);
     Route::post('/add',[ArticleController::class,'store']);
 });
 Route::group(['prefix'=>'comment'],function () {
-    Route::post('/',[CommentController::class,'index']);
+    Route::get('/',[CommentController::class,'index']);
     Route::post('/add',[CommentController::class,'store']);
 });
