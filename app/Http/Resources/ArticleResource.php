@@ -21,8 +21,11 @@ class ArticleResource extends JsonResource
         'audio_file_path'=>asset($this->audio_file_path),
         'cover_file_path'=>asset($this->cover_file_path),
         'price'=>$this->price,
+        'pages_count'=>$this->pages_count,
         'title'=>$this->title,
         'description'=>$this->description,
+        'summary'=>$this->summary,
+        'language'=>$this->language,
         'translations'=>$this->translations,
         'user'=>$this->user,
         'comments'=>$this->comments

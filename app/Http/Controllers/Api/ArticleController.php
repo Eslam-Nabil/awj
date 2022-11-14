@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ArticleResource;
 use App\Http\Requests\StoreArticleRequest;
 use Astrotomic\Translatable\Validation\RuleFactory;
+use Illuminate\Support\Facades\Config;
 
 class ArticleController extends Controller
 {
@@ -19,9 +20,10 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($lang)
     {
-
+        Config::set('translatable.locale', $lang);
+        // dd($lang);
         $articles = ArticleResource::collection(Article::get());
         return response()->json(['success' => true,'data'=>$articles], 200);
     }

@@ -54,7 +54,7 @@ Route::group(['prefix'=>'admin'],function () {
 });
 
 Route::group(['prefix'=>'article'],function () {
-    Route::get('/',[ArticleController::class,'index']);
+    Route::get('/{lang}',[ArticleController::class,'index']);
     Route::post('/add',[ArticleController::class,'store'])->middleware('auth:api');
 });
 
