@@ -21,7 +21,8 @@ class CreateArticlesTable extends Migration
             $table->string('cover_file_path');
             $table->float('price');
             $table->integer('category_id');
-            $table->string('status');
+            $table->integer('pages_count');
+            $table->string('status')->nullable();
             $table->boolean('isApproved')->default(0);
             $table->timestamps();
             $table->softDeletes();
@@ -32,7 +33,9 @@ class CreateArticlesTable extends Migration
             $table->integer('article_id')->unsigned();
             $table->string('locale')->index();
             $table->string('title');
+            $table->text('summary');
             $table->text('description');
+            $table->string('language')->nullable();
             $table->unique(['article_id','locale']);
             $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade');
         });

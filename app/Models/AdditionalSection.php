@@ -12,12 +12,13 @@ class AdditionalSection extends Model implements TranslatableContract
 {
     use Translatable,HasFactory;
     public $translatedAttributes = ['title', 'description'];
-    protected $fillable = ['image_path'];
+    protected $fillable = ['image_path','type_id','additionalsectionable_id','additionalsectionable_type','section_types_id'];
 
-    public function page()
+    public function additionalsectionable()
     {
-        return $this->belongsTo(Pages::class,'pages_id');
+        return $this->morphTo();
     }
+
     public function type()
     {
         return $this->belongsTo(SectionType::class,'section_types_id');

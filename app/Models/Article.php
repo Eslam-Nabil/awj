@@ -13,9 +13,10 @@ class Article extends Model implements TranslatableContract
     use Translatable,HasFactory;
     protected $fillable=[
         'user_id','article_file_path','audio_file_path',
-        'cover_file_path','price','category_id','status','isApproved'
+        'cover_file_path','price','category_id','status','isApproved',
+        'pages_count'
     ];
-    public $translatedAttributes = ['title', 'description'];
+    public $translatedAttributes = ['title', 'description','summary','language'];
 
 
    /**
@@ -38,4 +39,8 @@ class Article extends Model implements TranslatableContract
        return $this->hasMany(Comment::class, 'article_id');
    }
 
+   public function sections()
+   {
+    return $this->morphMany(AdditionalSection::class, 'additionalsectionable');
+   }
 }

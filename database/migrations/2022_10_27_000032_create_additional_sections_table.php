@@ -38,6 +38,7 @@ class CreateAdditionalSectionsTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('additional_section_translations');
         Schema::dropIfExists('additional_sections');
     }
 }

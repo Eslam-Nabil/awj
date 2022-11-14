@@ -20,14 +20,13 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    public  $translatedAttributes=['about','title'];
     protected $fillable = [
         'name',
         'email',
         'phone',
         'emirateid',
-        'about',
         'birthdate',
-        'title',
         'password',
     ];
 
@@ -58,7 +57,7 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function article(): HasMany
+    public function article()
     {
         return $this->hasMany(Article::class,'user_id');
     }
@@ -68,8 +67,8 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    
-    public function comments(): HasMany
+
+    public function comments()
     {
         return $this->hasMany(Comment::class, 'user_id');
     }

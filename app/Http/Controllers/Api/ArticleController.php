@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ArticleResource;
+use App\Http\Requests\StoreArticleRequest;
 use Astrotomic\Translatable\Validation\RuleFactory;
-use Exception;
 
 class ArticleController extends Controller
 {
@@ -20,7 +21,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-       
+
         $articles = ArticleResource::collection(Article::get());
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
@@ -41,22 +42,15 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreArticleRequest $request)
     {
-        // $userid=Auth::id();
-        $userid=1;
-        $rules = RuleFactory::make([
-            '%title%'             => 'required|string',
-            '%description%'       => 'required|string',
-            'category_id'         =>'required|integer',
-            'article_file_path'   =>'required|mimes:pdf',
-            'audio_file_path'     =>'required|mimes:audio/mpeg,mp3',
-            'cover_file_path'     =>'required|mimes:jpg,png',
-            'price'               =>'required|integer',
-        ]);
-
+        if (Auth::check()) {
+         $userid=Auth::id();
+        }else{
+            return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
+        }
         // $validatedData = $request->validate($rules);
-
+        $validated = $request->validated();
         $data=$request->all();
         $data['user_id']=$userid;
 

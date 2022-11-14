@@ -22,46 +22,43 @@ use App\Http\Controllers\Api\AdditionalSectionController;
 |
 */
 
-// Route::group(['prefix'=>'page','namespace'=>'Api'],function () {
-//         route::get('/home',[]);
-// });
-
 Route::get('/test',[UserController::class,'test']);
 Route::post('/register',[UserController::class,'register']);
 Route::post('/login',[UserController::class,'login']);
 
 Route::group(['prefix'=>'admin'],function () {
 
-    Route::get('/user/delete/{id}',[UserController::class,'destroy']);
-    Route::get('/users',[UserController::class,'index']);
+    Route::get('/users',[UserController::class,'index'])->middleware(['auth:api']);
+    Route::get('/user/delete/{id}',[UserController::class,'destroy'])->middleware('auth:api');
 
-    Route::post('/section/add',[AdditionalSectionController::class,'store']);
-    Route::get('/section/delete/{id}',[AdditionalSectionController::class,'destroy']);
-    Route::post('/section/update/{id}',[AdditionalSectionController::class,'update']);
+    Route::post('/section/add',[AdditionalSectionController::class,'store'])->middleware('auth:api');
+    Route::get('/section/delete/{id}',[AdditionalSectionController::class,'destroy'])->middleware('auth:api');
+    Route::post('/section/update/{id}',[AdditionalSectionController::class,'update'])->middleware('auth:api');
 
     Route::get('/team/members',[TeamController::class,'index']);
-    Route::post('/team/add',[TeamController::class,'store']);
-    Route::get('/team/delete/{id}',[TeamController::class,'destroy']);
-    Route::post('/team/update/{id}',[TeamController::class,'update']);
+    Route::post('/team/add',[TeamController::class,'store'])->middleware('auth:api');
+    Route::get('/team/delete/{id}',[TeamController::class,'destroy'])->middleware('auth:api');
+    Route::post('/team/update/{id}',[TeamController::class,'update'])->middleware('auth:api');
 
     Route::get('/home',[PagesController::class,'home']);
-    Route::post('/home/update',[PagesController::class,'home_update']);
+    Route::post('/home/update',[PagesController::class,'home_update'])->middleware('auth:api');
 
     Route::get('/about',[PagesController::class,'about']);
-    Route::post('/about/update',[PagesController::class,'about_update']);
-    Route::post('/team/update',[PagesController::class,'about_update']);
+    Route::post('/about/update',[PagesController::class,'about_update'])->middleware('auth:api');
+    Route::post('/team/update',[PagesController::class,'about_update'])->middleware('auth:api');
 
-    Route::get('/types',[SectionTypeController::class,'index']);
-    Route::post('/types/add',[SectionTypeController::class,'store']);
-    Route::get('/sections',[AdditionalSectionController::class,'index']);
+    Route::get('/types',[SectionTypeController::class,'index'])->middleware('auth:api');
+    Route::post('/types/add',[SectionTypeController::class,'store'])->middleware('auth:api');
+    Route::get('/sections',[AdditionalSectionController::class,'index'])->middleware('auth:api');
     Route::get('/languages',[LanguageController::class,'index']);
-
 });
+
 Route::group(['prefix'=>'article'],function () {
     Route::get('/',[ArticleController::class,'index']);
-    Route::post('/add',[ArticleController::class,'store']);
+    Route::post('/add',[ArticleController::class,'store'])->middleware('auth:api');
 });
+
 Route::group(['prefix'=>'comment'],function () {
     Route::get('/',[CommentController::class,'index']);
-    Route::post('/add',[CommentController::class,'store']);
+    Route::post('/add',[CommentController::class,'store'])->middleware('auth:api');
 });

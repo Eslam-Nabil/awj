@@ -5,12 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ArticleTranslation extends Model
+class UserTranslation extends Model
 {
     use HasFactory;
-
-    protected $table = 'article_translations';
+    protected $table = 'user_translations';
     public $timestamps = false;
-    protected $fillable = ['title', 'description','summary','language'];
-
+    protected $fillable=['about','title'];
 }
