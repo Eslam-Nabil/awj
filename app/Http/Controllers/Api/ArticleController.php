@@ -23,11 +23,30 @@ class ArticleController extends Controller
     public function index($lang)
     {
         Config::set('translatable.locale', $lang);
-        // dd($lang);
-        $articles = ArticleResource::collection(Article::get());
+        $user_id=Auth::id();
+        if (Auth::check() && $user_id == 1) {
+            $articles = ArticleResource::collection(Article::get());
+        }else{
+            $articles = ArticleResource::collection(Article::whereHas('user',function($q) use ($user_id) {
+            $q->where('id',$user_id);
+            })->get());
+           }
+         return response()->json(['success' => true,'data'=>$articles], 200);
+    }
+  /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getArticlesByUser($lang)
+    {
+        Config::set('translatable.locale', $lang);
+        $user_id=Auth::id();
+        $articles = ArticleResource::collection(Article::whereHas('user',function($q) use ($user_id) {
+            $q->where('id',$user_id);
+        })->get());
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -90,7 +109,7 @@ class ArticleController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -126,4 +145,5 @@ class ArticleController extends Controller
     {
         //
     }
+
 }

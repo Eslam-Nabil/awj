@@ -144,12 +144,12 @@ class UserController extends Controller
 
 
     }
-    public function test(Request $request)
+    public function test($id)
     {
-        $data=asset('images/');
+        $user=User::find($id);
+        $data=$user->getAllPermissions();
 
-
-        return response()->json(['status'=>'200','data'=>$data]);
+        return response()->json(['status'=>'200','data'=>$user]);
 
     }
 }
