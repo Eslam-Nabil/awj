@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\AdditionalSectionController;
 
 Route::get('/test/{id}',[UserController::class,'test']);
 Route::post('/register',[UserController::class,'register']);
+Route::post('/user/update',[UserController::class,'update'])->middleware(['auth:api']);
 Route::post('/login',[UserController::class,'login']);
 
 Route::group(['prefix'=>'admin'],function () {

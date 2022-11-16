@@ -10,10 +10,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements TranslatableContract
 {
-    use HasApiTokens,HasRoles,HasFactory, Notifiable;
+    use Translatable,HasApiTokens,HasRoles,HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
