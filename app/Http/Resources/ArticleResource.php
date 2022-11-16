@@ -28,7 +28,7 @@ class ArticleResource extends JsonResource
         'language'=>$this->language,
         'translations'=>$this->translations,
         'user'=>$this->user,
-        'comments'=>$this->comments
+        'comments'=>CommentsResource::collection($this->comments->where('show',1))
        ];
     }
 }

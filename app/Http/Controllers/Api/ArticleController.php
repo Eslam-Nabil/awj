@@ -23,14 +23,7 @@ class ArticleController extends Controller
     public function index($lang)
     {
         Config::set('translatable.locale', $lang);
-        $user_id=Auth::id();
-        if (Auth::check() && $user_id == 1) {
-            $articles = ArticleResource::collection(Article::get());
-        }else{
-            $articles = ArticleResource::collection(Article::whereHas('user',function($q) use ($user_id) {
-            $q->where('id',$user_id);
-            })->get());
-           }
+        $articles = ArticleResource::collection(Article::get());
          return response()->json(['success' => true,'data'=>$articles], 200);
     }
   /**
