@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\CommentsResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ArticleResource extends JsonResource
@@ -25,7 +26,7 @@ class ArticleResource extends JsonResource
         'description'=>$this->description,
         'translations'=>$this->translations,
         'user'=>$this->user,
-        'comments'=>$this->comments
+        'comments'=>CommentsResource::collection($this->comments)
        ];
     }
 }
