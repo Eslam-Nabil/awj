@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ArticleResource;
 use App\Http\Requests\StoreArticleRequest;
 use Astrotomic\Translatable\Validation\RuleFactory;
+use Illuminate\Support\Facades\Config;
 
 class ArticleController extends Controller
 {
@@ -19,13 +20,26 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($lang)
     {
-
+        Config::set('translatable.locale', $lang);
         $articles = ArticleResource::collection(Article::get());
+         return response()->json(['success' => true,'data'=>$articles], 200);
+    }
+  /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getArticlesByUser($lang)
+    {
+        Config::set('translatable.locale', $lang);
+        $user_id=Auth::id();
+        $articles = ArticleResource::collection(Article::whereHas('user',function($q) use ($user_id) {
+            $q->where('id',$user_id);
+        })->get());
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -88,7 +102,7 @@ class ArticleController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -124,4 +138,5 @@ class ArticleController extends Controller
     {
         //
     }
+
 }

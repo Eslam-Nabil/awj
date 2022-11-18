@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -15,6 +17,7 @@ class PermissionRoleSeeder extends Seeder
      */
     public function run()
     {
+
         $models=['user','article','type','section','category','team'];
         foreach ($models as $key => $model) {
             Permission::create(['name' => 'create.'.$model]);
@@ -30,7 +33,8 @@ class PermissionRoleSeeder extends Seeder
         $admin_role =   Role::create(['name' => 'admin']);
         $student_role=  Role::create(['name' => 'student']);
 
-        $admin_role->givePermissionTo(Permission::all());
+        $admin_role->syncPermissions(Permission::all());
+
         $publisher_role->givePermissionTo([
             'view.article',
             'approve.article'

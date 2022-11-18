@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\CommentsResource;
+use Exception;
 use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
@@ -43,7 +44,7 @@ class CommentController extends Controller
         if(Auth::check()) {
             $userid=Auth::id();
         }else{
-               return response()->json(['success' => false,'error'=>'Un Authorized'], 500);
+               return response()->json(['success' => false,'error'=>'Unauthorized'], 401);
             }
         $validator=Validator::make($request->all(),[
             'article_id'         =>'required|integer',
@@ -59,7 +60,7 @@ class CommentController extends Controller
         try{
             $comment=Comment::create($data);
         }catch(Exception $e){
-               return response()->json(['success' => false,'error'=>$e->getMessages()], 500);
+               return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
             }
         return response()->json(['success' => true,'data'=>$comment], 200);
     }
@@ -105,8 +106,31 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy($id)
     {
-        //
+        $comment=Comment::find($id);
+        if($comment){
+            $comment->delete();
+        }else{
+            return response()->json(['success'=>false,'message'=>"Comment is not found"],404);
+        }
+        return response()->json(['success'=>true,'message'=>"Comment deleted successfully"],200);
+    }
+       /**
+     * approve the specified resource to appar on front.
+     *
+     * @param  \App\Models\Comment  $comment
+     * @return \Illuminate\Http\Response
+     */
+    public function approveToShow($id)
+    {
+        $comment=Comment::find($id);
+        if($comment){
+            $comment->show = 1;
+            $comment->save();
+        }else{
+            return response()->json(['success'=>false,'message'=>"Comment is not found"],404);
+        }
+        return response()->json(['success'=>true,'message'=>"Comment approved successfully"],200);
     }
 }
