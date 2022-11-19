@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AdditionalSectionTranslations extends Model
+class SectionTranslations extends Model
 {
     use HasFactory;
-    
-    protected $table = 'additional_section_translations';
+
+    protected $table = 'section_translations';
     public $timestamps = false;
     protected $fillable = ['title', 'description'];
+
+
 }

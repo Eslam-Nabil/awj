@@ -10,7 +10,6 @@ use Astrotomic\Translatable\Translatable;
 class Team extends Model implements TranslatableContract
 {
     use Translatable,HasFactory;
-    
     public $translatedAttributes = ['name', 'job_title'];
     protected $fillable = ['picture_path'];
 }

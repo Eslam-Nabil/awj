@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 
-class AdditionalSection extends Model implements TranslatableContract
+class Section extends Model implements TranslatableContract
 {
     use Translatable,HasFactory;
+    protected $table='sections';
     public $translatedAttributes = ['title', 'description'];
-    protected $fillable = ['image_path','type_id','additionalsectionable_id','additionalsectionable_type','section_types_id'];
+    protected $fillable = ['image_path','sectionable_id','sectionable_type','section_types_id'];
 
-    public function additionalsectionable()
+    public function sectionable()
     {
         return $this->morphTo();
     }

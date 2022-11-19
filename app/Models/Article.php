@@ -41,6 +41,6 @@ class Article extends Model implements TranslatableContract
 
    public function sections()
    {
-    return $this->morphMany(AdditionalSection::class, 'additionalsectionable');
+    return $this->morphMany(Section::class, 'sectionable');
    }
 }

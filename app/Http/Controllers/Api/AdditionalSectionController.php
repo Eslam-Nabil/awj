@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\AdditionalSection;
+use App\Models\Section;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SectionResource;
 use Illuminate\Support\Facades\Validator;
 
-class AdditionalSectionController extends Controller
+class SectionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class AdditionalSectionController extends Controller
      */
     public function index()
     {
-        $sections=AdditionalSection::first();
+        $sections=Section::first();
         $sections->type;
         return response()->json(['success' => true,'data'=>$sections->type], 200);
     }
@@ -54,7 +54,7 @@ class AdditionalSectionController extends Controller
             $image_path='images/'.$request->image_path->getClientOriginalName();
         }
         try{
-        $section = AdditionalSection::create([
+        $section = Section::create([
             'title' => $request->title,
             'description' => $request->description,
             'image_path'=> (!empty($image_path) ?  $image_path : null ),

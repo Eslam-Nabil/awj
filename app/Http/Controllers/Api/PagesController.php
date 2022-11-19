@@ -19,11 +19,11 @@ class PagesController extends Controller
     }
 
     public function home(){
-        $page_data=new PageResource(Pages::where('id',1)->with('additional_section')->first());
+        $page_data=new PageResource(Pages::where('id',1)->with('sections')->first());
         return response()->json(['success' => true,'data'=>$page_data], 200);
     }
 
-    public function home_update( Request $request ){
+    public function home_update(Request $request ){
         // dd($request->all());
         $data=$request->all();
         $page = (Pages::where('id',1)->first() ? Pages::where('id',1)->first() : new Pages);
@@ -41,6 +41,7 @@ class PagesController extends Controller
         $data['second_image_path']= (!empty($second_image_path) ?  $second_image_path : null );
 
         try{
+        $page->sections()->update($data);
         $page->update($data);
         }catch(Exception $e){
             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
@@ -49,7 +50,7 @@ class PagesController extends Controller
     }
 
     public function about(){
-        $page_data['about_page']=new PageResource(Pages::where('id',2)->with('additional_section')->first());
+        $page_data['about_page']=new PageResource(Pages::where('id',2)->with('section')->first());
         $page_data['team']=TeamResource::collection(Team::all());
         return response()->json(['success' => true,'data'=>$page_data], 200);
     }

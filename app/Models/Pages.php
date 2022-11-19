@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use App\Models\SectionTranslations;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 
 
 class Pages extends Model implements TranslatableContract
@@ -22,6 +23,6 @@ class Pages extends Model implements TranslatableContract
     // }
     public function sections()
    {
-    return $this->morphMany(AdditionalSection::class, 'additionalsectionable');
+        return $this->morphMany(SectionTranslations::class, 'sectionable');
    }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\AdditionalSection;
+use App\Models\Section;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -13,9 +13,9 @@ class SectionType extends Model
     protected $guarded  = [];
 
 
-    public function additional_section()
+    public function section()
     {
-        return $this->hasMany(AdditionalSection::class,'section_types_id');
+        return $this->hasMany(Section::class,'section_types_id');
     }
 
 }

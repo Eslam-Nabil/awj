@@ -4,14 +4,15 @@ namespace App\Models;
 
 use App\Models\Article;
 use App\Models\Comment;
+use App\Models\SocialMedia;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Astrotomic\Translatable\Translatable;
 
 class User extends Authenticatable implements TranslatableContract
 {
@@ -62,6 +63,11 @@ class User extends Authenticatable implements TranslatableContract
     public function article()
     {
         return $this->hasMany(Article::class,'user_id');
+    }
+    
+    public function socialmedia()
+    {
+        return $this->hasMany(SocialMedia::class,'user_id');
     }
 
     /**
