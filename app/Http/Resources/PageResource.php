@@ -17,18 +17,17 @@ class PageResource extends JsonResource
     {
        return [
         'id'=>$this->id,
-        // 'page_name'=>$this->page_name,
-        // 'slug'=>$this->slug,
-        // 'main_title'=>$this->main_title,
-        // 'slogan'=>$this->slogan,
+        'page_name'=>$this->page_name,
+        'slug'=>$this->slug,
+        'main_title'=>$this->main_title,
+        'slogan'=>$this->slogan,
         'main_image_path'=>($this->main_image_path ? asset($this->main_image_path) : Null),
         'second_image_path'=>($this->second_image_path ?  asset($this->second_image_path) :Null),
-        // 'main_description'=>$this->main_description,
-        // 'second_description'=>$this->second_description,
-        //'type'=>($this->additional_section->type ? $this->additional_section : null )
+        'main_description'=>$this->main_description,
+        'second_description'=>$this->second_description,
+        //'type'=>($this->sections->type ? $this->sections->type : null ),
         'translation'=>$this->translations,
-        'sections'=>($this->section ? SectionResource::collection($this->section) : null ),
-
-    ];
+        'sections'=>($this->sections ? SectionResource::collection($this->sections) : null ),
+        ];
     }
 }

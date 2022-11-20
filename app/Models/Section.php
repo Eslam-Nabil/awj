@@ -13,7 +13,7 @@ class Section extends Model implements TranslatableContract
     use Translatable,HasFactory;
     protected $table='sections';
     public $translatedAttributes = ['title', 'description'];
-    protected $fillable = ['image_path','sectionable_id','sectionable_type','section_types_id'];
+    protected $fillable = ['image_path','section_type_id'];
 
     public function sectionable()
     {
@@ -22,6 +22,6 @@ class Section extends Model implements TranslatableContract
 
     public function type()
     {
-        return $this->belongsTo(SectionType::class,'section_types_id');
+        return $this->belongsTo(SectionType::class,'section_type_id');
     }
 }

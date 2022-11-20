@@ -39,10 +39,10 @@ class PagesController extends Controller
             $second_image_path='images/'.$request->second_image_path->getClientOriginalName();
         }
         $data['second_image_path']= (!empty($second_image_path) ?  $second_image_path : null );
-
+            // dd($data);
         try{
-        $page->sections()->update($data);
-        $page->update($data);
+            $page->update($data);
+            // $page->sections()->update($data);
         }catch(Exception $e){
             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
         }

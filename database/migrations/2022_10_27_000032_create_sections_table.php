@@ -15,8 +15,9 @@ class CreateSectionsTable extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->increments('id');
+            $table->morphs('sectionable');
+            $table->integer('section_type_id');
             $table->string('image_path')->nullable();
-            $table->integer('section_types_id');
             $table->timestamps();
         });
 
@@ -25,7 +26,6 @@ class CreateSectionsTable extends Migration
             $table->integer('section_id')->unsigned();
             $table->string('locale')->index();
             $table->string('title')->nullable();
-            $table->morphs('sectionable');
             $table->text('description')->nullable();
             $table->unique(['section_id','locale']);
             $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');

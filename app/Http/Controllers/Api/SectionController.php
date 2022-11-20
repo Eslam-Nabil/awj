@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Section;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SectionResource;
+use App\Models\Article;
+use App\Models\Pages;
 use Illuminate\Support\Facades\Validator;
 
 class SectionController extends Controller
@@ -42,9 +44,11 @@ class SectionController extends Controller
     public function store(Request $request)
     {
         $validator=Validator::make($request->all(),[
-            'page_id' =>'required|integer',
-            'type_id' =>'required',
+            'section_type_id' =>'required',
+            'object_id' =>'required',
+            'object_type' =>'required',
         ]);
+           $data= $request->all();
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'success' => false], 401);
         }
@@ -53,18 +57,16 @@ class SectionController extends Controller
             $request->image_path->move(public_path('images'), $request->image_path->getClientOriginalName());
             $image_path='images/'.$request->image_path->getClientOriginalName();
         }
+
+        $data['image_path']= $image_path ??  null ;
+        $object = $request->object_type == 'article' ?  Article::find($request->object_id) : Pages::find($request->object_id);
+
         try{
-        $section = Section::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'image_path'=> (!empty($image_path) ?  $image_path : null ),
-            'pages_id'=>$request->page_id,
-            'section_types_id'=>$request->type_id,
-        ]);
+            $row=$object->sections()->create($data);
         }catch(Exception $e){
             return response()->json(['success' => false,'message'=>"There is something wrong","error"=>$e->getMessage()], 401);
         }
-        return response()->json(['success' => true,'message'=>"Section added successfully",'data'=>new SectionResource($section)], 200);
+        return response()->json(['success' => true,'message'=>"Section added successfully",'data'=>new SectionResource($row)], 200);
     }
 
     /**
@@ -73,7 +75,7 @@ class SectionController extends Controller
      * @param  \App\Models\AdditionalSection  $additionalSection
      * @return \Illuminate\Http\Response
      */
-    public function show(AdditionalSection $additionalSection)
+    public function show()
     {
         //
     }
@@ -97,7 +99,7 @@ class SectionController extends Controller
      */
     public function update(Request $request, $id)
     {
-          $section=AdditionalSection::find($id);
+          $section=Section::find($id);
 
         if($section){
             if($request->hasFile('image_path')){
@@ -123,7 +125,7 @@ class SectionController extends Controller
      */
     public function destroy($id)
     {
-        $section=AdditionalSection::find($id);
+        $section=Section::find($id);
         if($section){
             $section->delete();
         }else{

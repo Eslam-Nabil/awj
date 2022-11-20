@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\SectionTypeController;
-use App\Http\Controllers\Api\AdditionalSectionController;
+use App\Http\Controllers\Api\SectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,9 +31,9 @@ Route::group(['prefix'=>'admin'],function () {
     Route::get('/users',[UserController::class,'index'])->middleware(['auth:api','role:admin']);
     Route::get('/user/delete/{id}',[UserController::class,'destroy'])->middleware(['auth:api','role:admin']);
 
-    Route::post('/section/add',[AdditionalSectionController::class,'store'])->middleware(['auth:api']);
-    Route::get('/section/delete/{id}',[AdditionalSectionController::class,'destroy'])->middleware(['auth:api','role:admin']);
-    Route::post('/section/update/{id}',[AdditionalSectionController::class,'update'])->middleware(['auth:api','role:admin']);
+    Route::post('/section/add',[SectionController::class,'store'])->middleware(['auth:api']);
+    Route::get('/section/delete/{id}',[SectionController::class,'destroy'])->middleware(['auth:api','role:admin']);
+    Route::post('/section/update/{id}',[SectionController::class,'update'])->middleware(['auth:api','role:admin']);
 
     Route::get('/team/members',[TeamController::class,'index']);
     Route::post('/team/add',[TeamController::class,'store'])->middleware(['auth:api','role:admin']);
@@ -48,7 +48,7 @@ Route::group(['prefix'=>'admin'],function () {
 
     Route::get('/types',[SectionTypeController::class,'index'])->middleware(['auth:api','role:admin']);
     Route::post('/types/add',[SectionTypeController::class,'store'])->middleware(['auth:api','role:admin']);
-    Route::get('/sections',[AdditionalSectionController::class,'index'])->middleware(['auth:api']);
+    Route::get('/sections',[SectionController::class,'index'])->middleware(['auth:api']);
     Route::get('/languages',[LanguageController::class,'index']);
 });
 
