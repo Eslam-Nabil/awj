@@ -14,7 +14,7 @@ class Article extends Model implements TranslatableContract
     protected $fillable=[
         'user_id','article_file_path','audio_file_path',
         'cover_file_path','price','category_id','status','isApproved',
-        'pages_count'
+        'pages_count','serial_number'
     ];
     public $translatedAttributes = ['title', 'description','summary','language'];
 

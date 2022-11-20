@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UserResource;
 use App\Http\Resources\CommentsResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,6 +18,7 @@ class ArticleResource extends JsonResource
     {
        return[
         'id'=>$this->id,
+        'serial_number'=>$this->serial_number,
         'category_id'=>$this->category_id,
         'article_file_path'=>asset($this->article_file_path),
         'audio_file_path'=>asset($this->audio_file_path),
@@ -28,7 +30,7 @@ class ArticleResource extends JsonResource
         'summary'=>$this->summary,
         'language'=>$this->language,
         'translations'=>$this->translations,
-        'user'=>$this->user,
+        'user'=>new UserResource($this->user),
         'sections'=>SectionResource::collection($this->sections),
         'comments'=>CommentsResource::collection($this->comments->where('show',1))
        ];

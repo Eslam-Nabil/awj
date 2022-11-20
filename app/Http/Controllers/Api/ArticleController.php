@@ -67,6 +67,7 @@ class ArticleController extends Controller
         $validated = $request->validated();
         $data=$request->all();
         $data['user_id']=$userid;
+        $data['serial_number']=time();
 
         if($request->hasFile('article_file_path')){
             $request->article_file_path->move(public_path('articles'), $request->article_file_path->getClientOriginalName());

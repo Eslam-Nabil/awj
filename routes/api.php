@@ -62,6 +62,6 @@ Route::group(['prefix'=>'comment'],function () {
     Route::get('/',[CommentController::class,'index']);
     Route::post('/add',[CommentController::class,'store'])->middleware('auth:api');
     Route::get('/approve/{id}',[CommentController::class,'approveToShow'])->middleware(['auth:api','role:admin']);
-    Route::get('/delete',[CommentController::class,'destroy'])->middleware(['auth:api','role:admin']);
-    Route::get('/article/{article}',[CommentController::class,'commentsOfArticle']);
+    Route::get('/delete/{id}',[CommentController::class,'destroy'])->middleware(['auth:api','role:admin']);
+    // Route::get('/article/{article}',[CommentController::class,'commentsOfArticle']);
 });

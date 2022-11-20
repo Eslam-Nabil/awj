@@ -16,6 +16,7 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
+            $table->integer('serial_number');
             $table->string('article_file_path');
             $table->string('audio_file_path');
             $table->string('cover_file_path');
