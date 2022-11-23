@@ -50,7 +50,7 @@ class PagesController extends Controller
     }
 
     public function about(){
-        $page_data['about_page']=new PageResource(Pages::where('id',2)->with('section')->first());
+        $page_data['about_page']=new PageResource(Pages::where('id',2)->with('sections')->first());
         $page_data['team']=TeamResource::collection(Team::all());
         return response()->json(['success' => true,'data'=>$page_data], 200);
     }
