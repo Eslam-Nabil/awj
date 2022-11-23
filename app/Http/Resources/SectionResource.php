@@ -20,8 +20,8 @@ class SectionResource extends JsonResource
             'title'=>$this->title,
             'description'=>$this->description,
             'image'=>($this->image_path ? asset($this->image_path) : null ),
+            'translations'=>$this->translations,
             'section_type'=>new TypeResource(SectionType::find($this->section_type_id))
-
         ];
     }
 }
