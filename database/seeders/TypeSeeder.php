@@ -15,7 +15,7 @@ class TypeSeeder extends Seeder
     public function run()
     {
         $types=[
-            'about','terms','privacy','why-awj','banner-section','numbers','article'
+            'about','terms','privacy','why-awj','banner-section','values','article'
         ];
     foreach ($types as $type) {
             SectionType::create([
