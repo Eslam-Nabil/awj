@@ -56,6 +56,7 @@ Route::group(['prefix'=>'article'],function () {
     Route::get('/{lang}',[ArticleController::class,'index']);
     Route::get('/{lang}/user/',[ArticleController::class,'getArticlesByUser'])->middleware(['auth:api']);
     Route::post('/add',[ArticleController::class,'store'])->middleware(['auth:api','role:admin|student|author']);
+    Route::get('/details/{lang}/{article}',[ArticleController::class,'show']);
 });
 
 Route::group(['prefix'=>'comment'],function () {
@@ -63,5 +64,4 @@ Route::group(['prefix'=>'comment'],function () {
     Route::post('/add',[CommentController::class,'store'])->middleware('auth:api');
     Route::get('/approve/{id}',[CommentController::class,'approveToShow'])->middleware(['auth:api','role:admin']);
     Route::get('/delete/{id}',[CommentController::class,'destroy'])->middleware(['auth:api','role:admin']);
-    // Route::get('/article/{article}',[CommentController::class,'commentsOfArticle']);
 });
