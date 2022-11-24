@@ -7,9 +7,10 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PagesController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\SectionController;
+use App\Http\Controllers\SocialMediaController;
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\SectionTypeController;
-use App\Http\Controllers\Api\SectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,4 +65,10 @@ Route::group(['prefix'=>'comment'],function () {
     Route::post('/add',[CommentController::class,'store'])->middleware('auth:api');
     Route::get('/approve/{id}',[CommentController::class,'approveToShow'])->middleware(['auth:api','role:admin']);
     Route::get('/delete/{id}',[CommentController::class,'destroy'])->middleware(['auth:api','role:admin']);
+});
+Route::group(['prefix'=>'socialmedia'],function () {
+    Route::get('/',[SocialMediaController::class,'index']);
+    Route::post('/add',[SocialMediaController::class,'store'])->middleware('auth:api');
+    Route::get('/approve/{id}',[SocialMediaController::class,'approveToShow'])->middleware(['auth:api','role:admin']);
+    Route::get('/delete/{id}',[SocialMediaController::class,'destroy'])->middleware(['auth:api','role:admin']);
 });
