@@ -29,7 +29,7 @@ class ArticleResource extends JsonResource
         'description'=>$this->description,
         'summary'=>$this->summary,
         'language'=>$this->language,
-        'translations'=>$this->translations,
+        'translation'=>$this->translations,
         'user'=>new UserResource($this->user),
         'sections'=>SectionResource::collection($this->sections),
         'comments'=>CommentsResource::collection($this->comments->where('show',1))
