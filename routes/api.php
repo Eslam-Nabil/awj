@@ -34,6 +34,7 @@ Route::group(['prefix'=>'admin'],function () {
 
     Route::post('/section/add',[SectionController::class,'store'])->middleware(['auth:api']);
     Route::get('/section/delete/{id}',[SectionController::class,'destroy'])->middleware(['auth:api','role:admin']);
+    Route::get('/section',[SectionController::class,'index'])->middleware(['auth:api','role:admin']);
     Route::post('/section/update/{id}',[SectionController::class,'update'])->middleware(['auth:api','role:admin']);
 
     Route::get('/team/members',[TeamController::class,'index']);

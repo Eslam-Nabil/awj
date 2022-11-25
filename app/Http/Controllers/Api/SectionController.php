@@ -20,9 +20,8 @@ class SectionController extends Controller
      */
     public function index()
     {
-        $sections=Section::first();
-        $sections->type;
-        return response()->json(['success' => true,'data'=>$sections->type], 200);
+        $sections=SectionResource::collection(Section::all());
+        return response()->json(['success' => true,'data'=>$sections], 200);
     }
 
     /**
@@ -50,7 +49,7 @@ class SectionController extends Controller
         ]);
            $data= $request->all();
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'success' => false], 401);
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 400);
         }
 
         if($request->hasFile('image_path')){
@@ -64,7 +63,7 @@ class SectionController extends Controller
         try{
             $row=$object->sections()->create($data);
         }catch(Exception $e){
-            return response()->json(['success' => false,'message'=>"There is something wrong","error"=>$e->getMessage()], 401);
+            return response()->json(['success' => false,'message'=>"There is something wrong","error"=>$e->getMessage()], 400);
         }
         return response()->json(['success' => true,'message'=>"Section added successfully",'data'=>new SectionResource($row)], 200);
     }
@@ -111,7 +110,7 @@ class SectionController extends Controller
                 $section->image_path =(!empty($image_path) ?  $image_path : null );
                 $section->save();
         }else{
-            return response()->json(['success'=>false,'message'=>"section not found"],401);
+            return response()->json(['success'=>false,'message'=>"section not found"],404);
         }
             return response()->json(['success'=>true ,'message'=>"section updated deleted successfully"],200);
     }
@@ -129,7 +128,7 @@ class SectionController extends Controller
         if($section){
             $section->delete();
         }else{
-            return response()->json(['success'=>false,'message'=>"section is not found"],401);
+            return response()->json(['success'=>false,'message'=>"section is not found"],404);
         }
         return response()->json(['success'=>true,'message'=>"section deleted successfully"],200);
 
