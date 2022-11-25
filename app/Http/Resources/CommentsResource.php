@@ -19,6 +19,7 @@ class CommentsResource extends JsonResource
             'comment'=>$this->comment_text,
             'user'=>$this->user->name,
             'article'=>$this->article->title,
+            'isApproved'=>$this->show,
         ];
     }
 }
