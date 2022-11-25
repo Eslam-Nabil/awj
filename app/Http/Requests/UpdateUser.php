@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Astrotomic\Translatable\Validation\RuleFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Astrotomic\Translatable\Validation\RuleFactory;
 
 class UpdateUser extends FormRequest
 {
@@ -24,8 +25,9 @@ class UpdateUser extends FormRequest
      */
     public function rules()
     {
+        $user_id = Auth::id();
         $rules = RuleFactory::make([
-            'phone' => 'nullable|numeric|digits:10|unique:users',
+            'phone' => 'nullable|numeric|digits:10|unique:users,phone,'.$user_id,
             'birthdate' => 'nullable|date',
             '%about%'=> 'string|max:255',
             '%title%'=> 'string',
