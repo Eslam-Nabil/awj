@@ -52,6 +52,8 @@ Route::group(['prefix'=>'admin'],function () {
     Route::post('/types/add',[SectionTypeController::class,'store'])->middleware(['auth:api','role:admin']);
     Route::get('/sections',[SectionController::class,'index'])->middleware(['auth:api']);
     Route::get('/languages',[LanguageController::class,'index']);
+    ## use only with  developer
+    Route::post('/pages/add',[PagesController::class,'add_page'])->middleware(['auth:api','role:admin']);
 });
 
 Route::group(['prefix'=>'article'],function () {

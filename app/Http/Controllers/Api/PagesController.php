@@ -83,4 +83,48 @@ class PagesController extends Controller
                 }
             return response()->json(['success' => true,'data'=>new PageResource($page)], 200);
     }
+    public function categories(){
+        $page_data['categories_page']=new PageResource(Pages::where('id',3)->with('sections')->first());
+        // $page_data['team']=TeamResource::collection(Team::all());
+        return response()->json(['success' => true,'data'=>$page_data], 200);
+    }
+
+    public function categories_update( Request $request ){
+            $rules = RuleFactory::make([
+                '%page_name%' => 'required|string',
+            ]);
+
+            // $validatedData = $request->validate($rules);
+
+            $data=$request->all();
+            $page = (Pages::where('id',3)->first() ? Pages::where('id',3)->first() : new Pages);
+
+            if($request->hasFile('main_image_path')){
+                $request->main_image_path->move(public_path('images'), $request->main_image_path->getClientOriginalName());
+                $main_image_path='images/'.$request->main_image_path->getClientOriginalName();
+            }
+            $data['main_image_path']= (!empty($main_image_path) ?  $main_image_path : null );
+
+            if($request->hasFile('second_image_path')){
+                $request->second_image_path->move(public_path('images'), $request->second_image_path->getClientOriginalName().time());
+                $second_image_path='images/'.$request->second_image_path->getClientOriginalName();
+            }
+            $data['second_image_path']= (!empty($second_image_path) ?  $second_image_path : null );
+            try{
+                $page->update($data);
+                }catch(Exception $e){
+                    return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
+                }
+            return response()->json(['success' => true,'data'=>new PageResource($page)], 200);
+    }
+
+
+    public function add_page(Request $request)
+    {
+        $data=$request->all();
+        Pages::create([
+            'page_name' =>$data['page_name'] ,
+            'slug' => str_replace(' ','-',$data['page_name']),
+        ]);
+    }
 }

@@ -14,7 +14,7 @@ class PagesSeeder extends Seeder
      */
     public function run()
     {
-        $pages=['home','about us'];
+        $pages=['home','about us','categories'];
         foreach($pages as $page){
             Pages::create([
                 'page_name' =>$page ,
