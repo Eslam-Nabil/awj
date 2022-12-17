@@ -75,9 +75,8 @@ class ContactusController extends Controller
         try {
             // $contactus->update($request->all());
             $contactus = Contactus::first() ??  new Contactus;
-            
+
             $update=$contactus->update($request->all());
-            dd($update);
             return response()->json(['success'=>true,'data'=>new ContactusResource($update)],200);
         } catch (Throwable $th) {
             return response()->json(['success'=>false,'data'=>$th->getMessage()],400);
