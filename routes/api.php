@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PagesController;
-use App\Http\Controllers\ContactusController;
+use App\Http\Controllers\Api\ContactusController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\SectionController;

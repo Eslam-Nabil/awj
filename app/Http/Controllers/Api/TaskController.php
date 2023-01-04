@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use Throwable;
-use App\Models\Contactus;
+use App\Models\Task;
 use Illuminate\Http\Request;
-use App\Http\Resources\ContactusResource;
+use App\Http\Controllers\Controller;
 
-class ContactusController extends Controller
+class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +15,7 @@ class ContactusController extends Controller
      */
     public function index()
     {
-        $contact = new ContactusResource(Contactus::first()) ?? [];
-        return response()->json(['success'=>true,'data'=>$contact],200);
+        //
     }
 
     /**
@@ -44,10 +42,10 @@ class ContactusController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Contactus  $contactus
+     * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function show(Contactus $contactus)
+    public function show(Task $task)
     {
         //
     }
@@ -55,10 +53,10 @@ class ContactusController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Contactus  $contactus
+     * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function edit(Contactus $contactus)
+    public function edit(Task $task)
     {
         //
     }
@@ -67,28 +65,21 @@ class ContactusController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Contactus  $contactus
+     * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Task $task)
     {
-        try {
-            // $contactus->update($request->all());
-            $contactus = Contactus::first() ??  new Contactus;
-            $contactus->update($request->all());
-            return response()->json(['success'=>true,'data'=>new ContactusResource($contactus)],200);
-        } catch (Throwable $th) {
-            return response()->json(['success'=>false,'data'=>$th->getMessage()],400);
-        }
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Contactus  $contactus
+     * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Contactus $contactus)
+    public function destroy(Task $task)
     {
         //
     }
