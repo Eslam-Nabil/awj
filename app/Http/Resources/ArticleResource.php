@@ -33,7 +33,8 @@ class ArticleResource extends JsonResource
         'translation'=>$this->translations,
         'user'=>new UserResource($this->user),
         'sections'=>SectionResource::collection($this->sections),
-        'comments'=>CommentsResource::collection($this->comments->where('show',1))
+        'comments'=>CommentsResource::collection($this->comments->where('show',1)),
+        'tasks'=>TasksResource::collection($this->tasks)
        ];
     }
 }

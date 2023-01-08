@@ -38,6 +38,11 @@ class Article extends Model implements TranslatableContract
    {
        return $this->hasMany(Comment::class, 'article_id');
    }
+   
+   public function tasks()
+   {
+       return $this->hasMany(Task::class, 'article_id');
+   }
 
    public function sections()
    {

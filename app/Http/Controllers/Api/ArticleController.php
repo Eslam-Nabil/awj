@@ -4,17 +4,20 @@ namespace App\Http\Controllers\Api;
 
 use Exception;
 use App\Models\Article;
+use App\Traits\UploadFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use App\Http\Resources\ArticleResource;
 use App\Http\Requests\StoreArticleRequest;
 use Astrotomic\Translatable\Validation\RuleFactory;
-use Illuminate\Support\Facades\Config;
 
 class ArticleController extends Controller
 {
+    use UploadFile;
     /**
      * Display a listing of the resource.
      *
@@ -63,32 +66,39 @@ class ArticleController extends Controller
         }else{
             return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
         }
-        // $validatedData = $request->validate($rules);
-        $validated = $request->validated();
-        $data=$request->all();
+        // $data=$request->all();
+        $data=$request->except('task');
+        // $tasks=$data['task'];
+        $tasks=$request->task;
         $data['user_id']=$userid;
         $data['serial_number']=time();
 
         if($request->hasFile('article_file_path')){
-            $request->article_file_path->move(public_path('articles'), $request->article_file_path->getClientOriginalName());
-            $article_file_path='articles/'.$request->article_file_path->getClientOriginalName();
+           $article_file_path=$this->storeFile($request->article_file_path,'articles');
         }
         $data['article_file_path']= (!empty($article_file_path) ?  $article_file_path : null );
 
         if($request->hasFile('audio_file_path')){
-            $request->audio_file_path->move(public_path('articles'), $request->audio_file_path->getClientOriginalName());
-            $audio_file_path='articles/'.$request->audio_file_path->getClientOriginalName();
+            $audio_file_path=$this->storeFile($request->audio_file_path,'articles');
         }
         $data['audio_file_path']= (!empty($audio_file_path) ?  $audio_file_path : null );
 
         if($request->hasFile('cover_file_path')){
-            $request->cover_file_path->move(public_path('articles'), $request->cover_file_path->getClientOriginalName());
-            $cover_file_path='articles/'.$request->cover_file_path->getClientOriginalName();
+            $cover_file_path=$this->storeFile($request->cover_file_path,'articles');
         }
         $data['cover_file_path']= (!empty($cover_file_path) ?  $cover_file_path : null );
 
         try{
+            DB::beginTransaction();
              $article=Article::create($data);
+                foreach($tasks as $task){
+                    if(array_key_exists('file_path',$task)){
+                        $file_path=$this->storeFile($task['file_path'],'tasks');
+                     }
+                     $task['file_path']=$file_path ?? null;
+                    $article->tasks()->create($task);
+                }
+            DB::commit();
         }catch(Exception $e){
                return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
             }
@@ -144,6 +154,19 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function buyArticle(Request $request)
+    {
+        if (Auth::check()) {
+            $userid=Auth::id();
+           }else{
+               return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
+           }
+        $data = $request->all();
+        $data['user_id']= $userid;
+        
+
     }
 
 }

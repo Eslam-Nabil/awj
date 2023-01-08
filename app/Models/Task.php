@@ -2,10 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Article;
 use Illuminate\Database\Eloquent\Model;
-
-class Task extends Model
+use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+class Task extends Model implements TranslatableContract
 {
-    use HasFactory;
+    use HasFactory, Translatable;
+    protected $fillable=['file_path','duration'];
+    public $translatedAttributes = ['title', 'description'];
+   /**
+    * Get the article that owns the Task
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    */
+   public function article()
+   {
+    return $this->belongsTo(Article::class, 'article_id');
+   }
+
 }
