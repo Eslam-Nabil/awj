@@ -15,9 +15,14 @@ class CreateUserArticlesTable extends Migration
     {
         Schema::create('user_articles', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('article_id')->unsigned();
             $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade');
-            $table->string('payment_status');
+            $table->boolean('is_free');
+            $table->string('order_id')->nullable();
+            $table->string('order_status')->nullable();
+            $table->string('price')->nullable();
             $table->timestamps();
         });
     }

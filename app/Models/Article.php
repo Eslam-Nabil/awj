@@ -12,7 +12,7 @@ class Article extends Model implements TranslatableContract
 {
     use Translatable,HasFactory;
     protected $fillable=[
-        'user_id','article_file_path','audio_file_path',
+        'user_id','has_task','article_file_path','audio_file_path',
         'cover_file_path','price','category_id','status','isApproved',
         'pages_count','serial_number'
     ];
@@ -38,7 +38,7 @@ class Article extends Model implements TranslatableContract
    {
        return $this->hasMany(Comment::class, 'article_id');
    }
-   
+
    public function tasks()
    {
        return $this->hasMany(Task::class, 'article_id');
@@ -47,5 +47,10 @@ class Article extends Model implements TranslatableContract
    public function sections()
    {
     return $this->morphMany(Section::class, 'sectionable');
+   }
+
+   public function users()
+   {
+       return $this->belongsToMany(User::class,'user_articles')->withPivot('is_free','order_id','order_status','price')->withTimestamps();
    }
 }

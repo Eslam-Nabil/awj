@@ -68,6 +68,7 @@ Route::group(['prefix'=>'article'],function () {
     Route::get('/{lang}/user/',[ArticleController::class,'getArticlesByUser'])->middleware(['auth:api']);
     Route::post('/add',[ArticleController::class,'store'])->middleware(['auth:api','role:admin|student|author']);
     Route::get('/details/{lang}/{article}',[ArticleController::class,'show']);
+    Route::post('/buy',[ArticleController::class,'buyArticle'])->middleware(['auth:api']);
 });
 
 Route::group(['prefix'=>'comment'],function () {

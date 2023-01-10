@@ -64,7 +64,7 @@ class User extends Authenticatable implements TranslatableContract
     {
         return $this->hasMany(Article::class,'user_id');
     }
-    
+
     public function socialmedia()
     {
         return $this->hasMany(SocialMedia::class,'user_id');
@@ -79,5 +79,14 @@ class User extends Authenticatable implements TranslatableContract
     public function comments()
     {
         return $this->hasMany(Comment::class, 'user_id');
+    }
+
+    public function articles()
+    {
+        return $this->belongsToMany(Article::class,'user_articles')->withPivot('is_free','order_id','order_status','price')->withTimestamps();
+    }
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class,'user_tasks')->withPivot('delivery_date','file_path','student_comment','status','delay');
     }
 }

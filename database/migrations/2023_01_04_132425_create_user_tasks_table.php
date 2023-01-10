@@ -15,10 +15,12 @@ class CreateUserTasksTable extends Migration
     {
         Schema::create('user_tasks', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('task_id')->unsigned();
             $table->foreign('task_id')->references('id')->on('articles')->onDelete('cascade');
             $table->date('delivery_date');
-            $table->file('file_path')->nullable();
+            $table->string('file_path')->nullable();
             $table->string('student_comment')->nullable();
             $table->string('status')->nullable();
             $table->boolean('delay')->nullable();

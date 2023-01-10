@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use App\Http\Resources\ArticleResource;
 use App\Http\Requests\StoreArticleRequest;
+use App\Models\User;
 use Astrotomic\Translatable\Validation\RuleFactory;
+use Carbon\Carbon;
 
 class ArticleController extends Controller
 {
@@ -90,7 +92,8 @@ class ArticleController extends Controller
 
         try{
             DB::beginTransaction();
-             $article=Article::create($data);
+            $article=Article::create($data);
+            if($request->has_task){
                 foreach($tasks as $task){
                     if(array_key_exists('file_path',$task)){
                         $file_path=$this->storeFile($task['file_path'],'tasks');
@@ -98,6 +101,7 @@ class ArticleController extends Controller
                      $task['file_path']=$file_path ?? null;
                     $article->tasks()->create($task);
                 }
+            }
             DB::commit();
         }catch(Exception $e){
                return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
@@ -163,10 +167,32 @@ class ArticleController extends Controller
            }else{
                return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
            }
-        $data = $request->all();
-        $data['user_id']= $userid;
-        
+        try{
+            DB::beginTransaction();
+            if($request->price == '0'){
+                $isFree = 1;
+            }else{
+                $isFree = 0;
+            }
+            $data=[
+                'is_free'=>$isFree,
+                'price'=>$request->price
+            ];
+            $user= User::find($userid);
+            $user->articles()->attach([$request->article_id],$data);
+            $tasks = Article::find($request->article_id)->tasks;
 
+            foreach($tasks as $task_col){
+                $task_ids[]=$task_col->id;
+                $delivery_date[]['delivery_date']=Carbon::now()->addDays($task_col->duration)->format("Y-m-d");
+            }
+            dd($delivery_date, $task_ids);
+            $user->articles()->attach($task_ids,$delivery_date);
+            DB::commit();
+            return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
+        }catch(Exception $e){
+
+            dd($e);
+        }
     }
-
 }

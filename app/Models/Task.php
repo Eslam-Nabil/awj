@@ -21,5 +21,9 @@ class Task extends Model implements TranslatableContract
    {
     return $this->belongsTo(Article::class, 'article_id');
    }
+   public function users()
+   {
+       return $this->belongsToMany(User::class,'user_tasks')->withPivot('delivery_date','file_path','student_comment','status','delay');
+   }
 
 }
