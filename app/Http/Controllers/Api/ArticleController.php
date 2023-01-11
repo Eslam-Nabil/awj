@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\BuyArticle;
 use Exception;
 use App\Models\Article;
 use App\Traits\UploadFile;
@@ -74,6 +75,9 @@ class ArticleController extends Controller
         $tasks=$request->task;
         $data['user_id']=$userid;
         $data['serial_number']=time();
+        if($request->price != '0'){
+            
+        }
 
         if($request->hasFile('article_file_path')){
            $article_file_path=$this->storeFile($request->article_file_path,'articles');
@@ -180,16 +184,10 @@ class ArticleController extends Controller
             ];
             $user= User::find($userid);
             $user->articles()->attach([$request->article_id],$data);
-            $tasks = Article::find($request->article_id)->tasks;
+            event(new BuyArticle($request->article_id, $user));
 
-            foreach($tasks as $task_col){
-                $task_ids[]=$task_col->id;
-                $delivery_date[]['delivery_date']=Carbon::now()->addDays($task_col->duration)->format("Y-m-d");
-            }
-            dd($delivery_date, $task_ids);
-            $user->articles()->attach($task_ids,$delivery_date);
             DB::commit();
-            return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
+            return response()->json(['success' => true,'message'=>'successfull action check projects for tasks'], 200);
         }catch(Exception $e){
 
             dd($e);

@@ -15,6 +15,7 @@ class AlterArticleTable extends Migration
     {
         Schema::table('articles', function (Blueprint $table) {
             $table->boolean('has_task')->after('serial_number');
+            
         });
     }
 
