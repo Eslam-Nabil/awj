@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use App\Http\Resources\ArticleResource;
 use App\Http\Requests\StoreArticleRequest;
+use App\Http\Resources\BoughtArticlesResource;
+use App\Http\Resources\TasksResource;
 use App\Models\User;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
@@ -76,7 +78,7 @@ class ArticleController extends Controller
         $data['user_id']=$userid;
         $data['serial_number']=time();
         if($request->price != '0'){
-            
+
         }
 
         if($request->hasFile('article_file_path')){
@@ -130,27 +132,12 @@ class ArticleController extends Controller
         return response()->json(['success' => true,'data'=>new ArticleResource($article)], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function getUserBoughtArticles($lang)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        Config::set('translatable.locale', $lang);
+        $user = Auth::user();
+        $articles =  BoughtArticlesResource::collection($user->articles);
+        return response()->json(['success' => true,'data'=>$articles], 200);
     }
 
     /**
@@ -171,6 +158,7 @@ class ArticleController extends Controller
            }else{
                return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
            }
+
         try{
             DB::beginTransaction();
             if($request->price == '0'){
@@ -189,7 +177,6 @@ class ArticleController extends Controller
             DB::commit();
             return response()->json(['success' => true,'message'=>'successfull action check projects for tasks'], 200);
         }catch(Exception $e){
-
             dd($e);
         }
     }

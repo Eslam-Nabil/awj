@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TasksResource extends JsonResource
+class User_Tasks extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,11 +18,14 @@ class TasksResource extends JsonResource
             'id'=>$this->id,
             'title'=>$this->title,
             'description'=>$this->description,
+            'task_file'=>asset($this->file_path) ?? null,
             'duration'=>$this->duration,
+            'delivery_date'=>$this->pivot->delivery_date,
+            'student_submit'=>$this->pivot->file_path,
+            'student_comment'=>$this->pivot->student_comment,
             'status'=>$this->pivot->status,
             'delay'=>$this->pivot->delay,
-            'delivery_date'=>$this->pivot->delivery_date,
-            'file'=>asset($this->file_path) ?? null,
+            'start_date'=>$this->pivot->created_at,
         ];
     }
 }

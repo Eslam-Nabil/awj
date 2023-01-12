@@ -111,9 +111,14 @@ class TaskController extends Controller
         Config::set('translatable.locale', $lang);
 
         try{
-            $user=User::findOrFail($userid)->whereHas('tasks');
-            $tasks= $user->tasks;
+            $user=User::findOrFail($userid)->whereHas('tasks',function ($query) {
+                $query->where('status', 'like', 'To Do');
+            })->first();
+            // return $user;
+
+            $tasks= $user->tasks()->get();
             return $tasks;
+
             return response()->json(['success' => true,'tasks'=>TasksResource::collection($tasks)], 200);
         }catch(Exception $e){
             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);

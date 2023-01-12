@@ -72,9 +72,11 @@ Route::group(['prefix'=>'task'],function () {
     Route::get('/details/{lang}/{task}',[TaskController::class,'show']);
     // Route::post('/buy',[ArticleController::class,'buyArticle'])->middleware(['auth:api']);
 });
+  
 Route::group(['prefix'=>'article'],function () {
     Route::get('/{lang}',[ArticleController::class,'index']);
     Route::get('/{lang}/user/',[ArticleController::class,'getArticlesByUser'])->middleware(['auth:api']);
+    Route::get('/{lang}/user/bought/',[ArticleController::class,'getUserBoughtArticles'])->middleware(['auth:api']);
     Route::post('/add',[ArticleController::class,'store'])->middleware(['auth:api','role:admin|student|author']);
     Route::get('/details/{lang}/{article}',[ArticleController::class,'show']);
     Route::post('/buy',[ArticleController::class,'buyArticle'])->middleware(['auth:api']);
