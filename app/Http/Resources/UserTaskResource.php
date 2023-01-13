@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class User_Tasks extends JsonResource
+class UserTaskResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,7 +26,7 @@ class User_Tasks extends JsonResource
             'student_comment'=>$this->pivot->student_comment,
             'status'=>$this->pivot->status,
             'delay'=>$this->pivot->delay,
-            'start_date'=>$this->pivot->created_at,
+            'start_date'=>date('Y-m-d', strtotime($this->pivot->created_at)),
         ];
     }
 }

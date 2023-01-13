@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
+use Carbon\Carbon;
 use App\Models\Task;
+use App\Models\User;
+use App\Traits\UploadFile;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\TasksResource;
-use App\Models\User;
-use Exception;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\TasksResource;
 use Illuminate\Support\Facades\Config;
+use App\Http\Requests\SubmitTaskRequest;
+use App\Http\Resources\UserTaskResource;
 
 class TaskController extends Controller
 {
+    use UploadFile;
     /**
      * Display a listing of the resource.
      *
@@ -28,9 +33,32 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function submitTask(SubmitTaskRequest $request)
     {
-        //
+        if (Auth::check()) {
+            $user=Auth::user();
+        }else{
+            return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
+        }
+        
+           try{
+            $task = $user->tasks->where('pivot.task_id',$request->task_id)->first();
+            (Carbon::now()->gt($task->pivot->delivery_date)  ? $delay = 1 : $delay = 0);
+            if($request->hasFile('file_path')){
+                $task_file_path=$this->storeFile($request->file_path,'tasks');
+            }
+            $task->pivot->update([
+                'delay'=>$delay,
+                'file_path'=>$task_file_path,
+                'student_comment' => $request->student_comment,
+                'delivered_date' => date('d-m-Y', strtotime(time())),
+                'status'=>'inProgress'
+            ]);
+
+            return response()->json(['success' => true,'data'=>new  UserTaskResource($task)], 200);
+        }catch(Exception $e){
+            return response()->json(['success' => true,'error'=>$e->getMessage()], 500);
+        }
     }
 
     /**
@@ -55,16 +83,6 @@ class TaskController extends Controller
 
     }
 
-    /**
-     * Show the form for change tak status the specified resource.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function SubmitTask(Request $request)
-    {
-
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -117,9 +135,9 @@ class TaskController extends Controller
             // return $user;
 
             $tasks= $user->tasks()->get();
-            return $tasks;
 
-            return response()->json(['success' => true,'tasks'=>TasksResource::collection($tasks)], 200);
+
+            return response()->json(['success' => true,'tasks'=>UserTaskResource::collection($tasks)], 200);
         }catch(Exception $e){
             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
         }

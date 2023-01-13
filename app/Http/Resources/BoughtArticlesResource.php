@@ -31,7 +31,7 @@ class BoughtArticlesResource extends JsonResource
             'description'=>$this->description,
             'summary'=>$this->summary,
             'language'=>$this->language,
-            'tasks'=>User_Tasks::collection($user->tasks->where('article_id',$this->id) )
+            'tasks'=>UserTaskResource::collection($user->tasks->where('article_id',$this->id) )
            ];
     }
 }

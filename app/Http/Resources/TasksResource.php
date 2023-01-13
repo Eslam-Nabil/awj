@@ -19,9 +19,6 @@ class TasksResource extends JsonResource
             'title'=>$this->title,
             'description'=>$this->description,
             'duration'=>$this->duration,
-            'status'=>$this->pivot->status,
-            'delay'=>$this->pivot->delay,
-            'delivery_date'=>$this->pivot->delivery_date,
             'file'=>asset($this->file_path) ?? null,
         ];
     }

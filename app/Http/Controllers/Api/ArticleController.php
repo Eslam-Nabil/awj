@@ -148,7 +148,7 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-        //
+            
     }
 
     public function buyArticle(Request $request)

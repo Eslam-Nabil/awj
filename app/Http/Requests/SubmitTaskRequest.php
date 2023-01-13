@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SocialMediaRequest extends FormRequest
+class SubmitTaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class SocialMediaRequest extends FormRequest
     public function rules()
     {
         return [
-            'platform'=>'required|string',
-            'url'=>'required|url',
-            'user_id'=>'required|exists:users,id'
+            'file_path'=>'required',
+            'task_id'=>'required|exists:tasks,id',
         ];
     }
 }

@@ -33,7 +33,7 @@ class addTasksToUser
         if(!empty($tasks)){
             foreach($tasks as $task_col){
                 $delivery_date['delivery_date']=Carbon::now()->addDays($task_col->duration)->format("Y-m-d");
-                $delivery_date['status']='To Do';
+                $delivery_date['status']='ToDo';
                 $user->tasks()->attach([$task_col->id],$delivery_date);
             }
         }
