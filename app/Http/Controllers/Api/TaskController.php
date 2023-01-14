@@ -40,7 +40,7 @@ class TaskController extends Controller
         }else{
             return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
         }
-        
+
            try{
             $task = $user->tasks->where('pivot.task_id',$request->task_id)->first();
             (Carbon::now()->gt($task->pivot->delivery_date)  ? $delay = 1 : $delay = 0);
@@ -122,15 +122,12 @@ class TaskController extends Controller
         if (Auth::check()) {
             $userid=Auth::id();
         }else{
-
             return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
         }
-
         Config::set('translatable.locale', $lang);
-
         try{
             $user=User::findOrFail($userid)->whereHas('tasks',function ($query) {
-                $query->where('status', 'like', 'To Do');
+                $query->where('status', 'like', 'ToDo');
             })->first();
             // return $user;
 
