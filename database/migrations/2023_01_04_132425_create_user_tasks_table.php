@@ -20,7 +20,7 @@ class CreateUserTasksTable extends Migration
             $table->integer('task_id')->unsigned();
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
             $table->date('delivery_date');
-            $table->date('delivered_date');
+            $table->date('delivered_date')->nullable();
             $table->string('file_path')->nullable();
             $table->string('student_comment')->nullable();
             $table->string('status')->nullable();
