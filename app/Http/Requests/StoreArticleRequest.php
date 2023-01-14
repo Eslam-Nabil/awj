@@ -29,8 +29,8 @@ class StoreArticleRequest extends FormRequest
             '%description%'       => 'required|string',
             'category_id'         =>'required|integer',
             'article_file_path'   =>'required|mimes:pdf',
-            'audio_file_path'     =>'required|mimes:audio/mpeg,mp3',
-            'cover_file_path'     =>'required|mimes:jpg,png',
+            'audio_file_path'     =>'required|mimes:audio/mpeg,ogg,wav,mp3',
+            'cover_file_path'     =>'required|mimes:jpg,jpeg,gif,webp,png',
             'price'               =>'required|integer',
             'pages_count'         =>'required|integer',
         ]);
