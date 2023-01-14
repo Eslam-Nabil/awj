@@ -126,10 +126,8 @@ class TaskController extends Controller
         }
         Config::set('translatable.locale', $lang);
         try{
-            $user=User::findOrFail($userid)->whereHas('tasks',function ($query) {
-                $query->where('status', 'like', 'ToDo');
-            })->first();
-            // return $user;
+            $user=User::findOrFail($userid)->whereHas('tasks')->first();
+            //  return $user;
 
             $tasks= $user->tasks()->get();
 
