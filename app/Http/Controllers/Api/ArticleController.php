@@ -16,6 +16,7 @@ use App\Http\Resources\ArticleResource;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Resources\BoughtArticlesResource;
 use App\Http\Resources\TasksResource;
+use App\Http\Resources\UserTaskResource;
 use App\Models\User;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
@@ -148,7 +149,7 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-            
+
     }
 
     public function buyArticle(Request $request)
@@ -179,5 +180,24 @@ class ArticleController extends Controller
         }catch(Exception $e){
             dd($e);
         }
+    }
+    public function articleTasks($lang,$articleId)
+    {
+        if (Auth::check()) {
+            $userid=Auth::id();
+        }else{
+            return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
+        }
+        Config::set('translatable.locale', $lang);
+
+        try{
+            $user=User::findOrFail($userid)->whereHas('tasks')->first();
+            //Magic method
+            $tasks= $user->tasks()->whereArticleId($articleId)->get();
+            return response()->json(['success' => true,'tasks'=>UserTaskResource::collection($tasks)], 200);
+        }catch(Exception $e){
+            return response()->json(['success' => false,'message'=>'There is something wrong','error'=>$e->getMessage()], 500);
+        }
+
     }
 }
