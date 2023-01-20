@@ -51,7 +51,7 @@ class TaskController extends Controller
                 'delay'=>$delay,
                 'file_path'=>$task_file_path,
                 'student_comment' => $request->student_comment,
-                'delivered_date' => date('d-m-Y', strtotime(time())),
+                'delivered_date' => Carbon::now()->format("Y-m-d"),
                 'status'=>'inProgress'
             ]);
 
@@ -138,5 +138,5 @@ class TaskController extends Controller
         }
 
     }
-    
+
 }
