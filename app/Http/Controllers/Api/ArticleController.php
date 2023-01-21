@@ -191,7 +191,7 @@ class ArticleController extends Controller
         Config::set('translatable.locale', $lang);
 
         try{
-            $user=User::findOrFail($userid)->whereHas('tasks')->first();
+            $user=User::findOrFail($userid);
             //Magic method
             $tasks= $user->tasks()->whereArticleId($articleId)->get();
             return response()->json(['success' => true,'tasks'=>UserTaskResource::collection($tasks)], 200);

@@ -87,6 +87,6 @@ class User extends Authenticatable implements TranslatableContract
     }
     public function tasks()
     {
-        return $this->belongsToMany(Task::class,'user_tasks')->withPivot('delivery_date','file_path','student_comment','status','delay')->withTimestamps();
+        return $this->belongsToMany(Task::class,'user_tasks')->withPivot('delivery_date','delivered_date','file_path','student_comment','status','delay')->withTimestamps();
     }
 }
