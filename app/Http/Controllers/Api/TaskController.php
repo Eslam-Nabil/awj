@@ -121,19 +121,14 @@ class TaskController extends Controller
         Config::set('translatable.locale', $lang);
         try{
            $tasks=UserTaskResource::collection(Task::with('users')->get());
+           $tasks = Task::with('users')->get();
+           return $tasks;
             $tasks=Task::whereHas('users' , function($q){
                 $q->where('user_tasks.status','inProgress');
             })->get();
-            return $tasks;
-            $tasks=Task::with('tasksToReview')->get();
-
-          $tasks = Task::with('tasksToReview')->get();
-          //  $tasks= $user->tasks()->get();
             return response()->json(['success' => true,'tasks'=>UserTaskResource::collection($tasks)], 200);
         }catch(Exception $e){
             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
         }
-
     }
-
 }
