@@ -49,15 +49,6 @@ class ArticleController extends Controller
         })->get());
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -79,7 +70,6 @@ class ArticleController extends Controller
         $data['user_id']=$userid;
         $data['serial_number']=time();
         if($request->price != '0'){
-
         }
 
         if($request->hasFile('article_file_path')){
@@ -174,13 +164,13 @@ class ArticleController extends Controller
             $user= User::find($userid);
             $user->articles()->attach([$request->article_id],$data);
             event(new BuyArticle($request->article_id, $user));
-
             DB::commit();
             return response()->json(['success' => true,'message'=>'successfull action check projects for tasks'], 200);
         }catch(Exception $e){
             dd($e);
         }
     }
+
     public function articleTasks($lang,$articleId)
     {
         if (Auth::check()) {
@@ -188,8 +178,8 @@ class ArticleController extends Controller
         }else{
             return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
         }
-        Config::set('translatable.locale', $lang);
 
+        Config::set('translatable.locale', $lang);
         try{
             $user=User::findOrFail($userid);
             //Magic method
@@ -198,6 +188,5 @@ class ArticleController extends Controller
         }catch(Exception $e){
             return response()->json(['success' => false,'message'=>'There is something wrong','error'=>$e->getMessage()], 500);
         }
-
     }
 }

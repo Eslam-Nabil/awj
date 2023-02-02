@@ -67,6 +67,7 @@ Route::group(['prefix'=>'admin'],function () {
 Route::group(['prefix'=>'task'],function () {
     Route::post('/submit',[TaskController::class,'submitTask'])->middleware(['auth:api','role:student|admin']);
     Route::get('/{lang}/user',[TaskController::class,'UserTasks'])->middleware(['auth:api']);
+    Route::get('/{lang}/toreview',[TaskController::class,'tasksToReview'])->middleware(['auth:api','role:reviewer|admin']);
     // Route::get('/{lang}/user/',[ArticleController::class,'getArticlesByUser'])->middleware(['auth:api']);
     // Route::post('/add',[ArticleController::class,'store'])->middleware(['auth:api','role:admin|student|author']);
 });

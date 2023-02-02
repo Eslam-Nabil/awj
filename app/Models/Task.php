@@ -25,5 +25,14 @@ class Task extends Model implements TranslatableContract
    {
        return $this->belongsToMany(User::class,'user_tasks')->withPivot('delivery_date','file_path','student_comment','status','delay')->withTimestamps();
    }
+   public function tasksToReview()
+   {
+       return $this->belongsToMany(Task::class,'user_tasks')
+       ->withPivot('delivery_date','file_path','student_comment','status','delay')
+       ->withTimestamps()
+       ->where('status','inProgress')
+      //->get()
+       ;
+   }
 
 }

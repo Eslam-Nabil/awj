@@ -15,8 +15,10 @@ class CreateTaskReviewsTable extends Migration
     {
         Schema::create('task_reviews', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('task_id')->references('id')->on('articles')->onDelete('cascade');
+            $table->integer('task_id')->unsigned();
+            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
             $table->date('delivery_date');
             $table->string('status')->nullable();
             $table->string('reviewer_comment')->nullable();

@@ -40,7 +40,6 @@ class TaskController extends Controller
         }else{
             return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
         }
-
            try{
             $task = $user->tasks->where('pivot.task_id',$request->task_id)->first();
             (Carbon::now()->gt($task->pivot->delivery_date)  ? $delay = 1 : $delay = 0);
@@ -61,16 +60,6 @@ class TaskController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -81,18 +70,6 @@ class TaskController extends Controller
     public function show()
     {
 
-    }
-
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Task $task)
-    {
-        //
     }
 
     /**
@@ -132,6 +109,26 @@ class TaskController extends Controller
             $tasks= $user->tasks()->get();
 
 
+            return response()->json(['success' => true,'tasks'=>UserTaskResource::collection($tasks)], 200);
+        }catch(Exception $e){
+            return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
+        }
+
+    }
+
+    public function tasksToReview($lang)
+    {
+        Config::set('translatable.locale', $lang);
+        try{
+           $tasks=UserTaskResource::collection(Task::with('users')->get());
+            $tasks=Task::whereHas('users' , function($q){
+                $q->where('user_tasks.status','inProgress');
+            })->get();
+            return $tasks;
+            $tasks=Task::with('tasksToReview')->get();
+
+          $tasks = Task::with('tasksToReview')->get();
+          //  $tasks= $user->tasks()->get();
             return response()->json(['success' => true,'tasks'=>UserTaskResource::collection($tasks)], 200);
         }catch(Exception $e){
             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);

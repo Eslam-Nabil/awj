@@ -21,12 +21,13 @@ class UserTaskResource extends JsonResource
             'description'=>$this->description,
             'task_file'=>asset($this->file_path) ?? null,
             'duration'=>$this->duration,
-            'delivery_date'=>$this->pivot->delivery_date,
-            'student_submit'=>$this->pivot->file_path,
-            'student_comment'=>$this->pivot->student_comment,
-            'status'=>$this->pivot->status,
-            'delay'=>$this->pivot->delay,
-            'start_date'=>date('Y-m-d', strtotime($this->pivot->created_at)),
+            'delivery_date'=>$this->pivot->delivery_date ?? null,
+            'delivered_date'=>$this->pivot->delivered_date ?? null,
+            'student_submit'=>$this->pivot->file_path ?? null ,
+            'student_comment'=>$this->pivot->student_comment ?? null,
+            'status'=>$this->pivot->status ?? null,
+            'delay'=>$this->pivot->delay ?? null,
+          //  'start_date'=>date('Y-m-d', strtotime($this->pivot->created_at)) ,
         ];
     }
 }

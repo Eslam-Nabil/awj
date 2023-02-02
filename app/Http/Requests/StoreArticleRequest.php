@@ -25,14 +25,18 @@ class StoreArticleRequest extends FormRequest
     public function rules()
     {
         $rules = RuleFactory::make([
-            '%title%'             => 'required|string',
-            '%description%'       => 'required|string',
-            'category_id'         =>'required|integer',
-            'article_file_path'   =>'required|mimes:pdf',
-            'audio_file_path'     =>'required|mimes:audio/mpeg,ogg,wav,mp3',
-            'cover_file_path'     =>'required|mimes:jpg,jpeg,gif,webp,png',
-            'price'               =>'required|integer',
-            'pages_count'         =>'required|integer',
+            '%title%'              => 'required|string',
+            '%description%'        => 'required|string',
+            'category_id'          => 'required|integer',
+            'article_file_path'    => 'required|mimes:pdf',
+            'audio_file_path'      => 'required|mimes:audio/mpeg,ogg,wav,mp3',
+            'cover_file_path'      => 'required|mimes:jpg,jpeg,gif,webp,png',
+            'price'                => 'required|integer',
+            'pages_count'          => 'required|integer',
+            'task.*.file_path'     => 'required|mimes:pdf',
+            'task.*.%description%' => 'required|string',
+            'task.*.%title%'       => 'required|string',
+            'task.*.duration'      => 'required|string',
         ]);
         return $rules;
     }
