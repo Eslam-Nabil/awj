@@ -14,6 +14,7 @@ use App\Http\Resources\TasksResource;
 use Illuminate\Support\Facades\Config;
 use App\Http\Requests\SubmitTaskRequest;
 use App\Http\Resources\UserTaskResource;
+use App\Http\Resources\UserWithTaskResource;
 
 class TaskController extends Controller
 {
@@ -120,13 +121,13 @@ class TaskController extends Controller
     {
         Config::set('translatable.locale', $lang);
         try{
-           $tasks=UserTaskResource::collection(Task::with('users')->get());
-           $tasks = Task::with('users')->get();
-           return $tasks;
-            $tasks=Task::whereHas('users' , function($q){
+           $tasks=User::whereHas('tasks' , function($q){
                 $q->where('user_tasks.status','inProgress');
-            })->get();
-            return response()->json(['success' => true,'tasks'=>UserTaskResource::collection($tasks)], 200);
+            })->with(['tasks' => function($task){
+                $task->where('user_tasks.status','inProgress');
+            }])
+            ->get();
+            return response()->json(['success' => true,'tasks'=>UserWithTaskResource::collection($tasks)], 200);
         }catch(Exception $e){
             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
         }

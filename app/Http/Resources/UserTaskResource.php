@@ -27,7 +27,7 @@ class UserTaskResource extends JsonResource
             'student_comment'=>$this->pivot->student_comment ?? null,
             'status'=>$this->pivot->status ?? null,
             'delay'=>$this->pivot->delay ?? null,
-          //  'start_date'=>date('Y-m-d', strtotime($this->pivot->created_at)) ,
+            'start_date'=>date('Y-m-d', strtotime($this->pivot->created_at)) ,
         ];
     }
 }
