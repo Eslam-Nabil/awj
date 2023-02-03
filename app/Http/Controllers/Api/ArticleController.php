@@ -152,7 +152,7 @@ class ArticleController extends Controller
         }catch(Exception $e){
             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
         }
-        return response()->json(['success' => true,'data'=>new ArticleResource($article)], 200);
+        return response()->json(['success' => true,'message'=>'article Deleted successfully'], 200);
     }
 
     public function buyArticle(Request $request)
