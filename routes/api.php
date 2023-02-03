@@ -83,6 +83,7 @@ Route::group(['prefix'=>'article'],function () {
     Route::get('/{lang}/tasks/{articleid}',[ArticleController::class,'articleTasks'])->middleware(['auth:api','role:student|admin']);
     Route::get('/en/topublish',[ArticleController::class,'articlesToPublish'])->middleware(['auth:api','role:publisher|admin']);
     Route::post('/approve',[ArticleController::class,'approve'])->middleware(['auth:api','role:publisher|admin']);
+    Route::post('/delete',[ArticleController::class,'destroy'])->middleware(['auth:api','role:publisher|admin']);
 });
 
 Route::group(['prefix'=>'comment'],function () {
