@@ -117,9 +117,8 @@ class TaskController extends Controller
 
     }
 
-    public function tasksToReview($lang)
+    public function tasksToReview()
     {
-        Config::set('translatable.locale', $lang);
         try{
            $tasks=User::whereHas('tasks' , function($q){
                 $q->where('user_tasks.status','inProgress');
@@ -130,6 +129,19 @@ class TaskController extends Controller
             return response()->json(['success' => true,'tasks'=>UserWithTaskResource::collection($tasks)], 200);
         }catch(Exception $e){
             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
+        }
+    }
+    public function approve(Request $request)
+    {
+        $user = User::find($request->user_id);
+       try{
+            $task = $user->tasks->where('pivot.task_id',$request->task_id)->first();
+            $task->pivot->update([
+                'status'=>'completed'
+            ]);
+            return response()->json(['success' => true,'data'=>new  UserTaskResource($task)], 200);
+        }catch(Exception $e){
+            return response()->json(['success' => true,'error'=>$e->getMessage()], 500);
         }
     }
 }
