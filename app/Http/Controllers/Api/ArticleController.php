@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Events\BuyArticle;
 use Exception;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Article;
+use App\Events\BuyArticle;
 use App\Traits\UploadFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\TasksResource;
 use Illuminate\Support\Facades\Config;
 use App\Http\Resources\ArticleResource;
+use App\Http\Resources\UserTaskResource;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Resources\BoughtArticlesResource;
-use App\Http\Resources\TasksResource;
-use App\Http\Resources\UserTaskResource;
-use App\Models\User;
+use App\Http\Resources\ArticleToPublishResource;
 use Astrotomic\Translatable\Validation\RuleFactory;
-use Carbon\Carbon;
 
 class ArticleController extends Controller
 {
@@ -33,6 +34,12 @@ class ArticleController extends Controller
     {
         Config::set('translatable.locale', $lang);
         $articles = ArticleResource::collection(Article::get());
+         return response()->json(['success' => true,'data'=>$articles], 200);
+    }
+
+    public function articlesToPublish()
+    {
+        $articles = ArticleToPublishResource::collection(Article::where('isApproved',0)->get());
          return response()->json(['success' => true,'data'=>$articles], 200);
     }
   /**
@@ -189,4 +196,16 @@ class ArticleController extends Controller
             return response()->json(['success' => false,'message'=>'There is something wrong','error'=>$e->getMessage()], 500);
         }
     }
+    public function approve(Request $request)
+    {
+        try{
+            $article=Article::findOrFail($request->article_id);
+            $article->isApproved = 1;
+            $article->save();
+        }catch(Exception $e){
+            return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
+        }
+        return response()->json(['success' => true,'data'=>new ArticleResource($article)], 200);
+    }
+
 }

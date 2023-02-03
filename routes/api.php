@@ -67,7 +67,8 @@ Route::group(['prefix'=>'admin'],function () {
 Route::group(['prefix'=>'task'],function () {
     Route::post('/submit',[TaskController::class,'submitTask'])->middleware(['auth:api','role:student|admin']);
     Route::get('/{lang}/user',[TaskController::class,'UserTasks'])->middleware(['auth:api']);
-    Route::get('/{lang}/toreview',[TaskController::class,'tasksToReview'])->middleware(['auth:api','role:reviewer|admin']);
+    Route::get('/toreview',[TaskController::class,'tasksToReview'])->middleware(['auth:api','role:reviewer|admin']);
+    Route::post('/approve',[TaskController::class,'approve'])->middleware(['auth:api','role:reviewer|admin']);
     // Route::get('/{lang}/user/',[ArticleController::class,'getArticlesByUser'])->middleware(['auth:api']);
     // Route::post('/add',[ArticleController::class,'store'])->middleware(['auth:api','role:admin|student|author']);
 });
@@ -78,8 +79,10 @@ Route::group(['prefix'=>'article'],function () {
     Route::get('/{lang}/user/bought/',[ArticleController::class,'getUserBoughtArticles'])->middleware(['auth:api']);
     Route::post('/add',[ArticleController::class,'store'])->middleware(['auth:api','role:admin|student|author']);
     Route::get('/details/{lang}/{article}',[ArticleController::class,'show']);
-    Route::post('/buy',[ArticleController::class,'buyArticle'])->middleware(['auth:api']);
+    Route::post('/buy',[ArticleController::class,'buyArticle'])->middleware(['auth:api','role:admin|student']);
     Route::get('/{lang}/tasks/{articleid}',[ArticleController::class,'articleTasks'])->middleware(['auth:api','role:student|admin']);
+    Route::get('/en/topublish',[ArticleController::class,'articlesToPublish'])->middleware(['auth:api','role:publisher|admin']);
+    Route::post('/approve',[ArticleController::class,'approve'])->middleware(['auth:api','role:publisher|admin']);
 });
 
 Route::group(['prefix'=>'comment'],function () {
