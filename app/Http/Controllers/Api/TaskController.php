@@ -6,6 +6,7 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\UserTask;
 use App\Traits\UploadFile;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -47,13 +48,22 @@ class TaskController extends Controller
             if($request->hasFile('file_path')){
                 $task_file_path=$this->storeFile($request->file_path,'tasks');
             }
+
+            // $task->comments()->create([
+            //     'isStudent'=>1,
+            //     'comment'=>$request->student_comment,
+            // ]);
             $task->pivot->update([
                 'delay'=>$delay,
                 'file_path'=>$task_file_path,
-                'student_comment' => $request->student_comment,
                 'delivered_date' => Carbon::now()->format("Y-m-d"),
                 'status'=>'inProgress'
             ]);
+            UserTask::find($task->pivot->id)->comments()->create([
+                    'isStudent'=>1,
+                    'comment'=>$request->student_comment,
+                ]);
+
 
             return response()->json(['success' => true,'data'=>new  UserTaskResource($task)], 200);
         }catch(Exception $e){
@@ -131,6 +141,7 @@ class TaskController extends Controller
             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
         }
     }
+
     public function approve(Request $request)
     {
         $user = User::find($request->user_id);
@@ -139,6 +150,24 @@ class TaskController extends Controller
             $task->pivot->update([
                 'status'=>'completed'
             ]);
+            return response()->json(['success' => true,'data'=>new  UserTaskResource($task)], 200);
+        }catch(Exception $e){
+            return response()->json(['success' => true,'error'=>$e->getMessage()], 500);
+        }
+    }
+    public function reject(Request $request)
+    {
+        $user = User::find($request->user_id);
+       try{
+            $task = $user->tasks->where('pivot.task_id',$request->task_id)->first();
+            $task->pivot->update([
+                'status'=>'ToDo'
+            ]);
+            UserTask::find($task->pivot->id)->comments()->create([
+                'isStudent'=>0,
+                'comment'=>$request->comment,
+            ]);
+
             return response()->json(['success' => true,'data'=>new  UserTaskResource($task)], 200);
         }catch(Exception $e){
             return response()->json(['success' => true,'error'=>$e->getMessage()], 500);

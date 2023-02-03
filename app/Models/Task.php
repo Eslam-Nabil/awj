@@ -23,7 +23,7 @@ class Task extends Model implements TranslatableContract
    }
    public function users()
    {
-       return $this->belongsToMany(User::class,'user_tasks')->withPivot('delivery_date','file_path','student_comment','status','delay')->withTimestamps();
+       return $this->belongsToMany(User::class,'user_tasks')->withPivot('id','delivery_date','file_path','student_comment','status','delay')->withTimestamps();
    }
    public function tasksToReview()
    {
@@ -34,5 +34,8 @@ class Task extends Model implements TranslatableContract
       //->get()
        ;
    }
-
+   public function comments()
+   {
+       return $this->hasMany(Task::class, 'article_id');
+   }
 }
