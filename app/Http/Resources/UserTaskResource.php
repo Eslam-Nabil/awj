@@ -16,19 +16,19 @@ class UserTaskResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=>$this->id,
-            'title'=>$this->title,
-            'description'=>$this->description,
-            'task_file'=>asset($this->file_path) ?? null,
-            'duration'=>$this->duration,
-            'delivery_date'=>$this->pivot->delivery_date ?? null,
-            'delivered_date'=>$this->pivot->delivered_date ?? null,
-            'student_submit'=>$this->pivot->file_path ?? null ,
-            'student_comment'=>$this->pivot->student_comment ?? null,
-            'status'=>$this->pivot->status ?? null,
-            'delay'=>$this->pivot->delay ?? null,
-            'comments'=>$this->pivot->comments  ?? null,
-            'start_date'=>date('Y-m-d', strtotime($this->pivot->created_at)) ,
+            'id'              => $this->id,
+            'title'           => $this->title,
+            'description'     => $this->description,
+            'task_file'       => $this->file_path ? asset($this->file_path)             : null,
+            'duration'        => $this->duration,
+            'delivery_date'   => $this->pivot->delivery_date ?? null,
+            'delivered_date'  => $this->pivot->delivered_date ?? null,
+            'student_submit'  => $this->pivot->file_path ?asset($this->pivot->file_path): null ,
+            'student_comment' => $this->pivot->student_comment ?? null,
+            'status'          => $this->pivot->status ?? null,
+            'delay'           => $this->pivot->delay ?? null,
+            'comments'        => $this->pivot->comments  ?? null,
+            'start_date'      => date('Y-m-d', strtotime($this->pivot->created_at)) ,
         ];
     }
 }
