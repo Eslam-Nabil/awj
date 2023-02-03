@@ -146,7 +146,13 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-
+        try{
+            $article=Article::findOrFail($request->article_id);
+            $article->delete();
+        }catch(Exception $e){
+            return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
+        }
+        return response()->json(['success' => true,'data'=>new ArticleResource($article)], 200);
     }
 
     public function buyArticle(Request $request)
