@@ -99,3 +99,5 @@ Route::group(['prefix'=>'socialmedia'],function () {
     Route::get('/approve/{id}',[SocialMediaController::class,'approveToShow'])->middleware(['auth:api','role:admin']);
     Route::get('/delete/{id}',[SocialMediaController::class,'destroy'])->middleware(['auth:api','role:admin']);
 });
+
+Route::post('{lang}/search',[PagesController::class,'search']);

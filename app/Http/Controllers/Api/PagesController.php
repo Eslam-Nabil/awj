@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use Exception;
 use App\Models\Team;
+use App\Models\User;
 use App\Models\Pages;
+use App\Models\Article;
 use App\Models\HomePage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\TeamResource;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\ArticleResource;
 use Astrotomic\Translatable\Validation\RuleFactory;
 
 class PagesController extends Controller
@@ -126,5 +130,16 @@ class PagesController extends Controller
             'page_name' =>$data['page_name'] ,
             'slug' => str_replace(' ','-',$data['page_name']),
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        try{
+           $data['articles']= ArticleResource::collection(Article::WhereTranslationLike('title', '%' . $request->search . '%')->get());
+           $data['users']= UserResource::collection(User::where('name','like','%' . $request->search . '%')->role('author')->get());
+        }catch(Exception $e){
+                return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
+        }
+        return response()->json(['success' => true,'data'=>$data], 200);
     }
 }
