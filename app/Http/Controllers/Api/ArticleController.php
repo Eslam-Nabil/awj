@@ -213,5 +213,14 @@ class ArticleController extends Controller
         }
         return response()->json(['success' => true,'data'=>new ArticleResource($article)], 200);
     }
+    public function search(Request $request)
+    {
+        try{
+           $articles= ArticleResource::collection(Article::WhereTranslationLike('title', '%' . $request->search . '%')->get());
+        }catch(Exception $e){
+                return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
+        }
+        return response()->json(['success' => true,'data'=>$articles], 200);
+    }
 
 }

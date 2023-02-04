@@ -29,6 +29,7 @@ Route::get('/test/{id}',[UserController::class,'test']);
 Route::post('/register',[UserController::class,'register']);
 Route::post('/user/update',[UserController::class,'update'])->middleware(['auth:api']);
 Route::post('/login',[UserController::class,'login']);
+Route::post('/{lang}/search',[PagesController::class,'search']);
 
 Route::group(['prefix'=>'admin'],function () {
     Route::get('/users',[UserController::class,'index'])->middleware(['auth:api','role:admin']);
@@ -85,6 +86,7 @@ Route::group(['prefix'=>'article'],function () {
     Route::get('/en/topublish',[ArticleController::class,'articlesToPublish'])->middleware(['auth:api','role:publisher|admin']);
     Route::post('/approve',[ArticleController::class,'approve'])->middleware(['auth:api','role:publisher|admin']);
     Route::post('/delete',[ArticleController::class,'destroy'])->middleware(['auth:api','role:publisher|admin']);
+    Route::post('/{lang}/search',[ArticleController::class,'search']);
 });
 
 Route::group(['prefix'=>'comment'],function () {
@@ -100,4 +102,3 @@ Route::group(['prefix'=>'socialmedia'],function () {
     Route::get('/delete/{id}',[SocialMediaController::class,'destroy'])->middleware(['auth:api','role:admin']);
 });
 
-Route::post('{lang}/search',[PagesController::class,'search']);
