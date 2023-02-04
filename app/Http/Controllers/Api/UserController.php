@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
 use Rules\Password;
 use App\Models\User;
+use App\Traits\UploadFile;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUser;
 use App\Http\Requests\UpdateUser;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    use UploadFile;
     /**
      * Display a listing of the resource.
      *
@@ -131,6 +133,19 @@ class UserController extends Controller
         return response()->json([ 'success' => true,'data'=>new UserResource($user)], 200);
     }
 
+    public function updateProfilePicture(Request $request)
+    {
+        try{
+            $user=Auth::user();
+                $picture_path=$this->storeFile($request->picture,'users');
+            $user->picture = $picture_path;
+            $user->save();
+        }catch(Exception $e){
+            return response()->json([ 'success' => false,'error'=>$e->getMessage()], 401);
+        }
+        return response()->json([ 'success' => true,'data'=>new UserResource($user)], 200);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -146,11 +161,8 @@ class UserController extends Controller
             return response()->json(['status'=>'401','message'=>"User is not found"]);
         }
         return response()->json(['status'=>'200','message'=>"User deleted successfully"]);
-
-
-
-
     }
+
     public function test($id)
     {
         $user=User::find($id);
