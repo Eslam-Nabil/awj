@@ -2,17 +2,18 @@
 use App\Models\SectionType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PagesController;
-use App\Http\Controllers\Api\ContactusController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\SocialMediaController;
 use App\Http\Controllers\Api\LanguageController;
+use App\Http\Controllers\Api\ContactusController;
+use App\Http\Controllers\Api\NewsLetterController;
 use App\Http\Controllers\Api\SectionTypeController;
-use App\Http\Controllers\Api\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,12 @@ Route::group(['prefix'=>'task'],function () {
     Route::post('/reject',[TaskController::class,'reject'])->middleware(['auth:api','role:reviewer|admin']);
     // Route::get('/{lang}/user/',[ArticleController::class,'getArticlesByUser'])->middleware(['auth:api']);
     // Route::post('/add',[ArticleController::class,'store'])->middleware(['auth:api','role:admin|student|author']);
+});
+
+Route::group(['prefix'=>'newsletter'],function () {
+    Route::get('/all',[NewsLetterController::class,'index'])->middleware(['auth:api','role:admin']);
+    Route::post('/register',[NewsLetterController::class,'store']);
+    Route::post('/delete',[NewsLetterController::class,'destroy'])->middleware(['auth:api','role:admin']);
 });
 
 Route::group(['prefix'=>'article'],function () {
