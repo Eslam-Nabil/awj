@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\TaskController;
 
 Route::get('/test/{id}',[UserController::class,'test']);
 Route::post('/register',[UserController::class,'register']);
+Route::post('user/changepassword', [UserController::class, 'changePassword'])->middleware(['auth:api'])->name('changePassword');
 Route::post('/user/update',[UserController::class,'update'])->middleware(['auth:api']);
 Route::post('/user/picture',[UserController::class,'updateProfilePicture'])->middleware(['auth:api']);
 Route::post('/login',[UserController::class,'login']);

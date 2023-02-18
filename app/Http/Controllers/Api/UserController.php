@@ -105,9 +105,20 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function changePassword(Request $request)
+    {          
+        $this->validate($request, [
+            'current_password' => 'required|string',
+            'new_password' => 'required|confirmed|min:6|string'
+        ]);
+        if (!Hash::check($request->current_password, Auth::user()->password)) 
+        {
+            return response()->json([ 'success' => false,'message'=>'current password is not correct'], 500);
+        }
+        $user =  User::find(Auth::id());
+        $user->password =  Hash::make($request->new_password);
+        $user->save();
+        return response()->json([ 'success' => true,'message'=>"Password Changed Successfully"], 200);
     }
 
     /**
