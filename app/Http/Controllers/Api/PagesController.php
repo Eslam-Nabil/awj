@@ -134,9 +134,13 @@ class PagesController extends Controller
 
     public function search(Request $request)
     {
+        $search = $request->search;
         try{
-           $data['articles']= ArticleResource::collection(Article::WhereTranslationLike('title', '%' . $request->search . '%')->get());
-           $data['users']= UserResource::collection(User::where('name','like','%' . $request->search . '%')->role('author')->get());
+            $data['user_articles']= ArticleResource::collection(Article::whereHas('user' , function($query) use($search){
+                $query->where('name','like','%' . $search . '%');
+            })->get());
+             $data['articles']= ArticleResource::collection(Article::WhereTranslationLike('title', '%' . $request->search . '%')->get());
+            $data['users']= UserResource::collection(User::where('name','like','%' . $request->search . '%')->role('author')->get());
         }catch(Exception $e){
                 return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
         }
