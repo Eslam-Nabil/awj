@@ -21,7 +21,7 @@ class UserResource extends JsonResource
             'phone'=>$this->phone,
             'title'=>$this->title,
             'about'=>$this->about,
-            'picture'=>asset($this->picture),
+            'picture'=>$this->picture ? asset($this->picture): null,
             'birthdate'=>($this->birthdate ? date('d/m/Y',strtotime(str_replace('/','-',$this->birthdate))) : null),
             'role'=>$this->roles[0]->name
       ];
