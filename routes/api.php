@@ -27,7 +27,7 @@ use App\Http\Controllers\Api\SectionTypeController;
 */
 
 Route::get('/test/{id}',[UserController::class,'test']);
-Route::get('/user/{id}',[UserController::class,'show'])->middleware(['auth:api']);
+Route::get('/user/{id}',[UserController::class,'show'])->middleware(['auth:api','role:reviewer|admin']);
 Route::post('/register',[UserController::class,'register']);
 Route::post('user/changepassword', [UserController::class, 'changePassword'])->middleware(['auth:api'])->name('changePassword');
 Route::post('/user/update',[UserController::class,'update'])->middleware(['auth:api']);
