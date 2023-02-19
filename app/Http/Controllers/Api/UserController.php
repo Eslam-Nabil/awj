@@ -95,8 +95,17 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user= new UserResource(User::where('id',$id)->with('roles')->first());
-        return response()->json(['success' => true,'data'=>$user], 200);
+        try{
+        $user=User::findOrfail($id);
+        $ifStudent = $user->hasRole('student');
+            if($ifStudent){
+                return response()->json(['success' => true,'data'=>new UserResource($user)], 200);
+            }else{
+                return response()->json(['success' => false,'message'=>'You dont have permission to see this user'], 403);
+            }
+        }catch(Exception $e){
+            return response()->json(['success' => false,'message'=>$e->getMessage()], 500);
+        }
     }
 
     /**
