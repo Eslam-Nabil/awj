@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Carbon\Carbon;
+use App\Models\TaskComment;
+use App\Http\Resources\TaskCommentResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserTaskResource extends JsonResource
@@ -27,8 +29,9 @@ class UserTaskResource extends JsonResource
             'student_comment' => $this->pivot->student_comment ?? null,
             'status'          => $this->pivot->status ?? null,
             'delay'           => $this->pivot->delay ?? null,
-            'comments'        => $this->pivot->comments  ?? null,
+            // 'comments'        => $this->pivot->comments  ?? null,
             'start_date'      => date('Y-m-d', strtotime($this->pivot->created_at)) ,
+            'comments'        =>  TaskCommentResource::collection(TaskComment::where('user_task_id',$this->pivot->id)->get()),
         ];
     }
 }
