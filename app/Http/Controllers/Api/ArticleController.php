@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Exception;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Traits\Paypal;
 use App\Models\Article;
 use App\Events\BuyArticle;
 use App\Traits\UploadFile;
@@ -24,7 +25,7 @@ use Astrotomic\Translatable\Validation\RuleFactory;
 
 class ArticleController extends Controller
 {
-    use UploadFile;
+    use UploadFile,Paypal;
     /**
      * Display a listing of the resource.
      *
@@ -42,7 +43,7 @@ class ArticleController extends Controller
         $articles = ArticleToPublishResource::collection(Article::where('isApproved',0)->get());
          return response()->json(['success' => true,'data'=>$articles], 200);
     }
-  /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -157,28 +158,30 @@ class ArticleController extends Controller
 
     public function buyArticle(Request $request)
     {
-        if (Auth::check()) {
-            $userid=Auth::id();
-           }else{
-               return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
-           }
-
         try{
             DB::beginTransaction();
-            if($request->price == '0'){
+            $article = Article::find($request->article_id);
+            $paypal_request=[
+                'title'=>$article->title,
+                'price'=>$article->price
+            ];
+            if($article->price == '0'){
                 $isFree = 1;
             }else{
                 $isFree = 0;
             }
+            $order_result= $this->paypal_order_article($paypal_request);
             $data=[
                 'is_free'=>$isFree,
-                'price'=>$request->price
+                'price'=>$article->price,
+                'order_status'=>'inProgress',
+                'order_id'=>$order_result->id
             ];
-            $user= User::find($userid);
+            $user= User::find(Auth::id());
             $user->articles()->attach([$request->article_id],$data);
-            event(new BuyArticle($request->article_id, $user));
             DB::commit();
-            return response()->json(['success' => true,'message'=>'successfull action check projects for tasks'], 200);
+            return response()->json(['success' => true,'link'=>$order_result->links[1]], 200);
+            return response()->json(['success' => true,'message'=>'successfully action check projects for tasks'], 200);
         }catch(Exception $e){
             dd($e);
         }

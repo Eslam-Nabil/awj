@@ -79,6 +79,11 @@ Route::group(['prefix'=>'task'],function () {
     // Route::post('/add',[ArticleController::class,'store'])->middleware(['auth:api','role:admin|student|author']);
 });
 
+Route::group(['prefix'=>'paypal'],function () {
+    Route::get('/capture_payment_article?{token}',[ArticleController::class,'capture_payment_article'])->middleware(['auth:api','role:student|admin'])->name('paypal_capture');
+    Route::get('/cancel_payment_article',[ArticleController::class,'cancel_payment_article'])->middleware(['auth:api','role:student|admin'])->name('paypal_cancel');
+});
+
 Route::group(['prefix'=>'newsletter'],function () {
     Route::get('/all',[NewsLetterController::class,'index'])->middleware(['auth:api','role:admin']);
     Route::post('/register',[NewsLetterController::class,'store']);
