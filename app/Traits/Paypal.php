@@ -3,7 +3,10 @@
 namespace App\Traits;
 
 use Exception;
+use App\Models\User;
 use App\Events\BuyArticle;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 trait Paypal {
 
@@ -42,91 +45,91 @@ trait Paypal {
     public function paypal_order_article($request) {
         header('Content-type: application/json');
         try{
-                $access_token = $this->paypal_auth();
-                $cart_for_paypal=[];
-                    $cart_for_paypal[]=[
-                        'name'=>$request['title'],
-                        'price'=>$request['price'],
-                        'quantity'=>'1',
-                        'unit_amount'=>[
-                            "currency_code"=> 'USD',
-                            "value"=>$request['price'],
-                            ],
-                    ];
-                $amount=[
-                    "currency_code"=> 'USD',
-                    "value"=> $request['price'],
-                    "breakdown"=> [
-                        "item_total"=> [
-                            "currency_code"=> 'USD',
-                            "value"=> $request['price']
-                        ]
-                    ]
-                ];
-                $body=json_encode(array(
-                    "intent"=>"CAPTURE",
-                    "purchase_units" =>  [
-                            [
-                            "items"=>$cart_for_paypal,
-                            "amount"=> $amount
-                            ],
+            $access_token = $this->paypal_auth();
+            $cart_for_paypal=[];
+                $cart_for_paypal[]=[
+                    'name'=>$request['title'],
+                    'price'=>$request['price'],
+                    'quantity'=>'1',
+                    'unit_amount'=>[
+                        "currency_code"=> 'USD',
+                        "value"=>$request['price'],
                         ],
-                    "application_context"=> [
-                        "return_url"=> route('paypal_capture'),
-                        "cancel_url"=> route('paypal_cancel')
-                        ]
-                    ));
-    
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_HEADER => false,
-                    CURLOPT_URL => 'https://api-m.sandbox.paypal.com/v2/checkout/orders',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS=> $body,
-                    CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json',
-                    'Authorization: Bearer '.$access_token
-                    ),
-                )
-                );
-                $result_data = json_decode(curl_exec($curl));
-                curl_close($curl);
-                return $result_data;
-               
-            }catch(Exception $e){
-                dd($e);
-            }
+                ];
+            $amount=[
+                "currency_code"=> 'USD',
+                "value"=> $request['price'],
+                "breakdown"=> [
+                    "item_total"=> [
+                        "currency_code"=> 'USD',
+                        "value"=> $request['price']
+                    ]
+                ]
+            ];
+            $body=json_encode(array(
+                "intent"=>"CAPTURE",
+                "purchase_units" =>  [
+                        [
+                        "items"=>$cart_for_paypal,
+                        "amount"=> $amount
+                        ],
+                    ],
+                "application_context"=> [
+                    "return_url"=> route('paypal_capture'),
+                    "cancel_url"=> route('paypal_cancel')
+                    ]
+                ));
 
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_HEADER => false,
+                CURLOPT_URL => 'https://api-m.sandbox.paypal.com/v2/checkout/orders',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS=> $body,
+                CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Authorization: Bearer '.$access_token
+                ),
+            )
+            );
+            $result_data = json_decode(curl_exec($curl));
+            curl_close($curl);
+            return $result_data;          
+        }catch(Exception $e){
+            dd($e);
         }
     }
-    function capture_payment_article($token,$accesstoken){
+
+    public function capture_payment_article(Request $request){
+        $token = $request->token;
         $access_token = $this->paypal_auth();
+        $user=Auth::user();
         $ch = curl_init();
-    
         curl_setopt($ch, CURLOPT_URL, 'https://api-m.sandbox.paypal.com/v2/checkout/orders/'.$token.'/capture');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         
         $headers = array();
         $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Authorization: Bearer '.$accesstoken;
+        $headers[] = 'Authorization: Bearer '.$access_token;
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        
         $result = json_decode(curl_exec($ch));
-        if (curl_errno($ch)) {
-            return 'Error:' . curl_error($ch);
-        }
         if($result->status == 'COMPLETED'){
+            $data=[
+                'order_status'=>'completed',
+            ];
+            $article =$user->articles()->where('order_id',$result->id)->sync($data);
+            event(new BuyArticle($article->id, $user));
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
-            event(new BuyArticle($request->article_id, $user));
         }else{
         header("Location: ".get_site_url().'/fail' );
-    }	
-    function cancel_payment_article($request){
-    dd('canceled');
     }
-        
+}
+
+    public function cancel_payment_article(){
+        return response()->json(['success' => false,'message'=>'order  has been canceled'], 200);
+    } 
 }
 ?>

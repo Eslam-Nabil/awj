@@ -225,5 +225,5 @@ class ArticleController extends Controller
         }
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
-
+    
 }
