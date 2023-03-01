@@ -5,6 +5,7 @@ namespace App\Traits;
 use Exception;
 use App\Models\User;
 use App\Events\BuyArticle;
+use App\Models\UserArticle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +16,7 @@ trait Paypal {
        try{
         $user=\config('paypal.sandbox.client_id');
         $password=\config('paypal.sandbox.secret');
-           
+
            $setopt_content=array(
                  CURLOPT_URL => 'https://api-m.sandbox.paypal.com/v1/oauth2/token',
                  CURLOPT_HEADER => false,
@@ -96,7 +97,7 @@ trait Paypal {
             );
             $result_data = json_decode(curl_exec($curl));
             curl_close($curl);
-            return $result_data;          
+            return $result_data;
         }catch(Exception $e){
             dd($e);
         }
@@ -104,13 +105,13 @@ trait Paypal {
 
     public function capture_payment_article(Request $request){
         $token = $request->token;
+        $order = UserArticle::where('order_id',$token)->first();
         $access_token = $this->paypal_auth();
-        $user=Auth::user();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api-m.sandbox.paypal.com/v2/checkout/orders/'.$token.'/capture');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        
+
         $headers = array();
         $headers[] = 'Content-Type: application/json';
         $headers[] = 'Authorization: Bearer '.$access_token;
@@ -120,16 +121,18 @@ trait Paypal {
             $data=[
                 'order_status'=>'completed',
             ];
-            $article =$user->articles()->where('order_id',$result->id)->sync($data);
-            event(new BuyArticle($article->id, $user));
+
+            $order->sync($data);
+            event(new BuyArticle($order->article_id, $order->user_id));
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }else{
-        header("Location: ".get_site_url().'/fail' );
+
+
     }
 }
 
     public function cancel_payment_article(){
         return response()->json(['success' => false,'message'=>'order  has been canceled'], 200);
-    } 
+    }
 }
 ?>
