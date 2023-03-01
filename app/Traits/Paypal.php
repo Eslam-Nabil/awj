@@ -121,7 +121,6 @@ trait Paypal {
             $data=[
                 'order_status'=>'completed',
             ];
-
             $order->sync($data);
             event(new BuyArticle($order->article_id, $order->user_id));
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
