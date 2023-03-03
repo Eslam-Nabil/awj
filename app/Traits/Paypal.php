@@ -124,9 +124,12 @@ trait Paypal {
             ];
             $user->articles()->sync($data);
             event(new BuyArticle($order->article_id, $user->id));
-            return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
+            return redirect()->away(env('APP_URL').'/bag/success');
+            
+            // return response()->json(['success' => true,'message'=>'order captured successfully','url'=>], 200);
         }else{
-
+            return redirect()->away(env('APP_URL').'/bag/canceled');
+            return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }
     }
 
