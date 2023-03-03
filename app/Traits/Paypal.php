@@ -106,6 +106,7 @@ trait Paypal {
     public function capture_payment_article(Request $request){
         $token = $request->token;
         $order = UserArticle::where('order_id',$token)->first();
+        $user=User::find($order->user_id);
         $access_token = $this->paypal_auth();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api-m.sandbox.paypal.com/v2/checkout/orders/'.$token.'/capture');
@@ -121,14 +122,13 @@ trait Paypal {
             $data=[
                 'order_status'=>'completed',
             ];
-            $order->sync($data);
-            event(new BuyArticle($order->article_id, $order->user_id));
+            $user->articles()->sync($data);
+            event(new BuyArticle($order->article_id, $user->id));
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }else{
 
-
+        }
     }
-}
 
     public function cancel_payment_article(){
         return response()->json(['success' => false,'message'=>'order  has been canceled'], 200);
