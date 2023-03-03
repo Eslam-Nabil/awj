@@ -165,7 +165,7 @@ class ArticleController extends Controller
                 'title'=>$article->title,
                 'price'=>$article->price
             ];
-            if($article->price == '0'){
+            if($article->price == '0.00'){
                 $isFree = 1;
                 $data=[
                     'is_free'=>$isFree,
