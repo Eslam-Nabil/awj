@@ -167,18 +167,26 @@ class ArticleController extends Controller
             ];
             if($article->price == '0'){
                 $isFree = 1;
+                $data=[
+                    'is_free'=>$isFree,
+                    'price'=>$article->price,
+                    'order_status'=>'completed',
+                ];
+                $user= User::find(Auth::id());
+                $user->articles()->attach([$request->article_id],$data);
+                event(new BuyArticle($order->article_id, $user->id));
             }else{
                 $isFree = 0;
+                $order_result= $this->paypal_order_article($paypal_request);
+                $data=[
+                    'is_free'=>$isFree,
+                    'price'=>$article->price,
+                    'order_status'=>'inProgress',
+                    'order_id'=>$order_result->id
+                ];
+                $user= User::find(Auth::id());
+                $user->articles()->attach([$request->article_id],$data);
             }
-            $order_result= $this->paypal_order_article($paypal_request);
-            $data=[
-                'is_free'=>$isFree,
-                'price'=>$article->price,
-                'order_status'=>'inProgress',
-                'order_id'=>$order_result->id
-            ];
-            $user= User::find(Auth::id());
-            $user->articles()->attach([$request->article_id],$data);
             DB::commit();
             return response()->json(['success' => true,'link'=>$order_result->links[1]], 200);
             // return response()->json(['success' => true,'message'=>'successfully action check projects for tasks'], 200);
