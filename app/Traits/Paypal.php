@@ -38,7 +38,7 @@ trait Paypal {
            curl_close($ch);
            return $first_result_data->access_token;
         }catch(Exception $e){
-            dd($e);
+             return response()->json(['success' => false,'message'=>$e->getMessage()], 400);
         }
 
     }
@@ -99,7 +99,7 @@ trait Paypal {
             curl_close($curl);
             return $result_data;
         }catch(Exception $e){
-            dd($e);
+             return response()->json(['success' => false,'message'=>$e->getMessage()], 400);
         }
     }
 

@@ -181,9 +181,9 @@ class ArticleController extends Controller
             $user->articles()->attach([$request->article_id],$data);
             DB::commit();
             return response()->json(['success' => true,'link'=>$order_result->links[1]], 200);
-            return response()->json(['success' => true,'message'=>'successfully action check projects for tasks'], 200);
+            // return response()->json(['success' => true,'message'=>'successfully action check projects for tasks'], 200);
         }catch(Exception $e){
-            dd($e);
+             return response()->json(['success' => false,'message'=>$e->getMessage()], 400);
         }
     }
 
