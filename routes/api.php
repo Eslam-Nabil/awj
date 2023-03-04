@@ -92,6 +92,7 @@ Route::group(['prefix'=>'newsletter'],function () {
 
 Route::group(['prefix'=>'article'],function () {
     Route::get('/{lang}',[ArticleController::class,'index']);
+    Route::get('approved/{lang}',[ArticleController::class,'approved_articles']);
     Route::get('/{lang}/user/',[ArticleController::class,'getArticlesByUser'])->middleware(['auth:api']);
     Route::get('/{lang}/user/bought/',[ArticleController::class,'getUserBoughtArticles'])->middleware(['auth:api']);
     Route::post('/add',[ArticleController::class,'store'])->middleware(['auth:api','role:admin|student|author']);

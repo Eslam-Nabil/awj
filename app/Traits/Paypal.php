@@ -122,11 +122,10 @@ trait Paypal {
             $data=[
                 'order_status'=>'completed',
             ];
-            $user->articles()->sync([$request->article_id],$data);
-            event(new BuyArticle($order->article_id, $user->id));
-            return redirect()->away(env('APP_URL').'/bag/success');
-            
-            // return response()->json(['success' => true,'message'=>'order captured successfully','url'=>], 200);
+            $user->articles()->updateExistingPivot($order->article_id,$data);
+            event(new BuyArticle($order->article_id, $user));
+            return redirect()->away(env('APP_URL').'/bag/success')->with('success', 'order has captured successfully');
+            return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }else{
             return redirect()->away(env('APP_URL').'/bag/canceled');
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
@@ -134,7 +133,7 @@ trait Paypal {
     }
 
     public function cancel_payment_article(){
-        return response()->json(['success' => false,'message'=>'order  has been canceled'], 200);
+        return redirect()->away(env('APP_URL').'/bag/canceled');
     }
 }
 ?>

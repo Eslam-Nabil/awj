@@ -25,6 +25,7 @@ class ArticleResource extends JsonResource
         'cover_file_path'=>asset($this->cover_file_path),
         'price'=>$this->price,
         'status'=>$this->status,
+        'is_approved'=>$this->isApproved,
         'pages_count'=>$this->pages_count,
         'title'=>$this->title,
         'description'=>$this->description,
