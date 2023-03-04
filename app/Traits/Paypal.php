@@ -122,7 +122,7 @@ trait Paypal {
             $data=[
                 'order_status'=>'completed',
             ];
-            $user->articles()->sync([$request->article_id],$data);;
+            $user->articles()->sync([$request->article_id],$data);
             event(new BuyArticle($order->article_id, $user->id));
             return redirect()->away(env('APP_URL').'/bag/success');
             
