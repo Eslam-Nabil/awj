@@ -43,6 +43,14 @@ class ArticleController extends Controller
         $articles = ArticleToPublishResource::collection(Article::where('isApproved',0)->get());
          return response()->json(['success' => true,'data'=>$articles], 200);
     }
+
+    public function approved_articles($lang)
+    {
+        Config::set('translatable.locale', $lang);
+        $articles = ArticleToPublishResource::collection(Article::where('isApproved',1)->get());
+         return response()->json(['success' => true,'data'=>$articles], 200);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -54,7 +62,7 @@ class ArticleController extends Controller
         $user_id=Auth::id();
         $articles = ArticleResource::collection(Article::whereHas('user',function($q) use ($user_id) {
             $q->where('id',$user_id);
-        })->get());
+        })->where('isApproved',1)->get());
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
 
@@ -78,6 +86,9 @@ class ArticleController extends Controller
         $data['user_id']=$userid;
         $data['serial_number']=time();
         if($request->price != '0'){
+            $data['status']='premium';
+        }else{
+            $data['status']='free';
         }
 
         if($request->hasFile('article_file_path')){
@@ -160,30 +171,43 @@ class ArticleController extends Controller
     {
         try{
             DB::beginTransaction();
-            $article = Article::find($request->article_id);
+            $user= Auth::user();
+            $exist = $user->articles()->where('article_id',$request->article_id)->exists();
+            if($exist){
+                return response()->json(['success' => false,'message'=>'You cannot buy article twice'], 400);
+            }
+            $article = Article::find($request->article_id);   
             $paypal_request=[
                 'title'=>$article->title,
                 'price'=>$article->price
             ];
-            if($article->price == '0'){
+            if($article->price == '0.00'){
                 $isFree = 1;
+                $data=[
+                    'is_free'=>$isFree,
+                    'price'=>$article->price,
+                    'order_status'=>'completed',
+                ];
+                $user->articles()->attach([$request->article_id],$data);
+                event(new BuyArticle($request->article_id, $user));
+                DB::commit();
+                return response()->json(['success' => true,'message'=>'successfully action check projects for tasks'], 200);
             }else{
                 $isFree = 0;
+                $order_result= $this->paypal_order_article($paypal_request);
+                $data=[
+                    'is_free'=>$isFree,
+                    'price'=>$article->price,
+                    'order_status'=>'inProgress',
+                    'order_id'=>$order_result->id
+                ];
+                $user= User::find(Auth::id());
+                $user->articles()->attach([$request->article_id],$data);
+                DB::commit();
+                return response()->json(['success' => true,'link'=>$order_result->links[1]], 200);
             }
-            $order_result= $this->paypal_order_article($paypal_request);
-            $data=[
-                'is_free'=>$isFree,
-                'price'=>$article->price,
-                'order_status'=>'inProgress',
-                'order_id'=>$order_result->id
-            ];
-            $user= User::find(Auth::id());
-            $user->articles()->attach([$request->article_id],$data);
-            DB::commit();
-            return response()->json(['success' => true,'link'=>$order_result->links[1]], 200);
-            return response()->json(['success' => true,'message'=>'successfully action check projects for tasks'], 200);
         }catch(Exception $e){
-            dd($e);
+             return response()->json(['success' => false,'message'=>$e->getMessage()], 400);
         }
     }
 
@@ -205,6 +229,7 @@ class ArticleController extends Controller
             return response()->json(['success' => false,'message'=>'There is something wrong','error'=>$e->getMessage()], 500);
         }
     }
+
     public function approve(Request $request)
     {
         try{
@@ -216,6 +241,7 @@ class ArticleController extends Controller
         }
         return response()->json(['success' => true,'data'=>new ArticleResource($article)], 200);
     }
+
     public function search(Request $request)
     {
         try{

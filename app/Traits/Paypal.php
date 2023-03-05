@@ -38,7 +38,7 @@ trait Paypal {
            curl_close($ch);
            return $first_result_data->access_token;
         }catch(Exception $e){
-            dd($e);
+             return response()->json(['success' => false,'message'=>$e->getMessage()], 400);
         }
 
     }
@@ -99,13 +99,14 @@ trait Paypal {
             curl_close($curl);
             return $result_data;
         }catch(Exception $e){
-            dd($e);
+             return response()->json(['success' => false,'message'=>$e->getMessage()], 400);
         }
     }
 
     public function capture_payment_article(Request $request){
         $token = $request->token;
         $order = UserArticle::where('order_id',$token)->first();
+        $user=User::find($order->user_id);
         $access_token = $this->paypal_auth();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api-m.sandbox.paypal.com/v2/checkout/orders/'.$token.'/capture');
@@ -121,17 +122,18 @@ trait Paypal {
             $data=[
                 'order_status'=>'completed',
             ];
-            $order->sync($data);
-            event(new BuyArticle($order->article_id, $order->user_id));
+            $user->articles()->updateExistingPivot($order->article_id,$data);
+            event(new BuyArticle($order->article_id, $user));
+            return redirect()->away(env('APP_URL').'/bag/success')->with('success', 'order has captured successfully');
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }else{
-
-
+            return redirect()->away(env('APP_URL').'/bag/canceled');
+            return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
+        }
     }
-}
 
     public function cancel_payment_article(){
-        return response()->json(['success' => false,'message'=>'order  has been canceled'], 200);
+        return redirect()->away(env('APP_URL').'/bag/canceled');
     }
 }
 ?>
