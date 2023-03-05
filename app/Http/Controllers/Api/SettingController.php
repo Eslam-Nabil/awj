@@ -30,7 +30,7 @@ class SettingController extends Controller
             $setting->value = $request->value;
         }
         $setting->save();
-        return response()->json(['success' => true,'data'=>$setting], 200);
+        return response()->json(['success' => true,'data'=>new SettingResource($setting)], 200);
          
     }
 }
