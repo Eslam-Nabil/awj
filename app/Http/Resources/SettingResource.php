@@ -17,7 +17,7 @@ class SettingResource extends JsonResource
         return [
             'id'=> $this->id,
             'key'=>$this->key,
-            'value'=>$this->value,
+            'value'=>$this->type == 'image' ? asset($this->value) : $this->value ,
             'type'=>$this->type,
         ];
     }
