@@ -124,10 +124,10 @@ trait Paypal {
             ];
             $user->articles()->updateExistingPivot($order->article_id,$data);
             event(new BuyArticle($order->article_id, $user));
-            return redirect()->away(env('APP_URL').'/bag/success')->with('success', 'order has captured successfully');
+            return redirect()->away(env('APP_URL').'#/bag/success')->with('success', 'order has captured successfully');
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }else{
-            return redirect()->away(env('APP_URL').'/bag/canceled');
+            return redirect()->away(env('APP_URL').'#/bag/canceled');
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }
     }
