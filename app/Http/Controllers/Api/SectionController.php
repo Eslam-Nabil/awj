@@ -18,8 +18,9 @@ class SectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($lang)
     {
+        Config::set('translatable.locale', $lang);
         $sections=SectionResource::collection(Section::all());
         return response()->json(['success' => true,'data'=>$sections], 200);
     }

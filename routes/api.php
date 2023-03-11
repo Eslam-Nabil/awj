@@ -45,12 +45,12 @@ Route::group(['prefix'=>'admin'],function () {
     Route::get('/sections',[SectionController::class,'index'])->middleware(['auth:api','role:admin']);
     Route::post('/section/update/{id}',[SectionController::class,'update'])->middleware(['auth:api','role:admin']);
 
-    Route::get('/team/members',[TeamController::class,'index']);
+    Route::get('/{lang}/team/members',[TeamController::class,'index']);
     Route::post('/team/add',[TeamController::class,'store'])->middleware(['auth:api','role:admin']);
     Route::get('/team/delete/{id}',[TeamController::class,'destroy'])->middleware(['auth:api','role:admin']);
     Route::post('/team/update/{id}',[TeamController::class,'update'])->middleware(['auth:api','role:admin']);
 
-    Route::get('/home',[PagesController::class,'home']);
+    Route::get('/{lang}/home',[PagesController::class,'home']);
     Route::post('/home/update',[PagesController::class,'home_update'])->middleware(['auth:api','role:admin']);
 
     Route::get('/about',[PagesController::class,'about']);
@@ -64,7 +64,7 @@ Route::group(['prefix'=>'admin'],function () {
 
     Route::get('/types',[SectionTypeController::class,'index'])->middleware(['auth:api','role:admin']);
     Route::post('/types/add',[SectionTypeController::class,'store'])->middleware(['auth:api','role:admin']);
-    Route::get('/sections',[SectionController::class,'index'])->middleware(['auth:api']);
+    Route::get('/{lang}/sections',[SectionController::class,'index'])->middleware(['auth:api']);
     Route::get('/languages',[LanguageController::class,'index']);
     ## use only with  developer
     Route::post('/pages/add',[PagesController::class,'add_page'])->middleware(['auth:api','role:admin']);
@@ -123,7 +123,4 @@ Route::group(['prefix'=>'socialmedia'],function () {
 Route::group(['prefix'=>'setting'],function () {
     Route::get('/',[SettingController::class,'index']);
     Route::post('/edit',[SettingController::class,'edit'])->middleware(['auth:api','role:admin']);
-    Route::post('/reject',[TaskController::class,'reject'])->middleware(['auth:api','role:reviewer|admin']);
-    // Route::get('/{lang}/user/',[ArticleController::class,'getArticlesByUser'])->middleware(['auth:api']);
-    // Route::post('/add',[ArticleController::class,'store'])->middleware(['auth:api','role:admin|student|author']);
 });

@@ -26,7 +26,7 @@ class PageResource extends JsonResource
         'main_description'=>$this->main_description,
         'second_description'=>$this->second_description,
         //'type'=>($this->sections->type ? $this->sections->type : null ),
-        'translation'=>$this->translations,
+        // 'translation'=>$this->translations,
         'sections'=>($this->sections ? SectionResource::collection($this->sections) : null ),
         ];
     }

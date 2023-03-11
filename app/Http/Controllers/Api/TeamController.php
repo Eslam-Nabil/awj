@@ -16,8 +16,9 @@ class TeamController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($lang)
     {
+        Config::set('translatable.locale', $lang);
         $data = TeamResource::collection(Team::all());
 
         return response()->json(['success'=>true,'data'=>$data],200);
