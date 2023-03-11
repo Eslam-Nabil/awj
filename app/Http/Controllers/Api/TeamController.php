@@ -7,6 +7,7 @@ use App\Models\Team;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TeamResource;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 
 class TeamController extends Controller
