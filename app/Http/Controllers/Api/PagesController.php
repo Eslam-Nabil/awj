@@ -88,7 +88,8 @@ class PagesController extends Controller
                 }
             return response()->json(['success' => true,'data'=>new PageResource($page)], 200);
     }
-    public function categories(){
+    public function categories($lang){
+        Config::set('translatable.locale', $lang);
         $page_data['categories_page']=new PageResource(Pages::where('id',3)->with('sections')->first());
         // $page_data['team']=TeamResource::collection(Team::all());
         return response()->json(['success' => true,'data'=>$page_data], 200);
