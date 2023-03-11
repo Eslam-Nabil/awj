@@ -53,7 +53,7 @@ Route::group(['prefix'=>'admin'],function () {
     Route::get('/{lang}/home',[PagesController::class,'home']);
     Route::post('/home/update',[PagesController::class,'home_update'])->middleware(['auth:api','role:admin']);
 
-    Route::get('/about',[PagesController::class,'about']);
+    Route::get('/{lang}/about',[PagesController::class,'about']);
     Route::post('/about/update',[PagesController::class,'about_update'])->middleware(['auth:api','role:admin']);
 
     Route::get('/categories',[PagesController::class,'categories']);
