@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Exception;
 use Rules\Password;
 use App\Models\User;
+use App\Traits\Paypal;
 use App\Traits\UploadFile;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUser;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    use UploadFile;
+    use UploadFile,Paypal;
     /**
      * Display a listing of the resource.
      *
@@ -81,10 +82,18 @@ class UserController extends Controller
             $user->assignRole('student');
         }
         $token = $user->createToken('logintoken')->accessToken;
+        if($request->role=='author' || $request->role=='student' ){ 
+            $order_result = $this->paypal_order_register($request);
+            $user->paypalOrder()->create([
+                'order_id'=>$order_result->id,
+                'type'=>'register',
+                'order_status'=>'failed',
+            ]);
+        }
     }catch(\Exception $e){
         return response()->json([ 'success' => false,'error'=>$e->getMessage()], 401);
     }
-    return response()->json([ 'success' => true,'data'=>new UserResource($user)], 200);
+    return response()->json([ 'success' => true,'data'=>new UserResource($user),'url'=>$order_result->links[1]], 200);
 }
 
     /**

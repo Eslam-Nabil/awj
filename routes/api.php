@@ -82,6 +82,7 @@ Route::group(['prefix'=>'task'],function () {
 
 Route::group(['prefix'=>'paypal'],function () {
     Route::get('/capture_payment_article',[ArticleController::class,'capture_payment_article'])->name('paypal_capture');
+    Route::get('/capture_payment_register',[ArticleController::class,'capture_payment_register'])->name('paypal_register_capture');
     Route::get('/cancel_payment_article',[ArticleController::class,'cancel_payment_article'])->name('paypal_cancel');
 });
 

@@ -89,4 +89,9 @@ class User extends Authenticatable implements TranslatableContract
     {
         return $this->belongsToMany(Task::class,'user_tasks')->withPivot('id','delivery_date','delivered_date','file_path','student_comment','status','delay')->withTimestamps();
     }
+
+    public function paypalOrder()
+    {
+        return $this->hasMany(PaypalOrder::class,'user_id');
+    }
 }
