@@ -10,6 +10,7 @@ use App\Http\Resources\SectionResource;
 use App\Models\Article;
 use App\Models\Pages;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Config;
 
 class SectionController extends Controller
 {

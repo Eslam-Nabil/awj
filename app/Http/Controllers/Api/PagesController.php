@@ -15,6 +15,7 @@ use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\ArticleResource;
 use Astrotomic\Translatable\Validation\RuleFactory;
+use Illuminate\Support\Facades\Config;
 
 class PagesController extends Controller
 {
