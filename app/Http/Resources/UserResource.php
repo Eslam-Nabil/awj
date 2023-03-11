@@ -24,7 +24,7 @@ class UserResource extends JsonResource
             'picture'=>$this->picture ? asset($this->picture): null,
             'birthdate'=>($this->birthdate ? date('d/m/Y',strtotime(str_replace('/','-',$this->birthdate))) : null),
             'role'=>$this->roles[0]->name,
-            'status'=>$this->paypalOrder->where('type','register')->first()->order_status
+            'status'=>$this->paypalOrder->where('type','register')->first()->order_status ?? null
       ];
 
     }
