@@ -46,6 +46,13 @@ class UserController extends Controller
         }
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user=Auth::user();
+            if(!$user->paypalOrder->isEmpty()){
+                $paypalOrder=$user->paypalOrder->where('type','register')->first();
+                 if($paypalOrder->order_status == 'failed'){
+                    return response()->json(['success' => false,'message'=>'You must pay registration fees first','url'=>\config('paypal.sandbox.order_base').'/checkoutnow?token='.$paypalOrder->order_id], 200);
+                 }
+            }
+
             $token = $user->createToken('logintoken')->accessToken;
             return response()->json(['success' => true,'data'=>['token'=>$token,'user'=>new UserResource($user)]], 200);
         }
@@ -82,7 +89,7 @@ class UserController extends Controller
             $user->assignRole('student');
         }
         $token = $user->createToken('logintoken')->accessToken;
-        if($request->role=='author' || $request->role=='student' ){ 
+        if($request->role=='author' || $request->role=='student' ){
             $order_result = $this->paypal_order_register($request);
             $user->paypalOrder()->create([
                 'order_id'=>$order_result->id,
@@ -124,12 +131,12 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function changePassword(Request $request)
-    {          
+    {
         $this->validate($request, [
             'current_password' => 'required|string',
             'new_password' => 'required|confirmed|min:6|string'
         ]);
-        if (!Hash::check($request->current_password, Auth::user()->password)) 
+        if (!Hash::check($request->current_password, Auth::user()->password))
         {
             return response()->json([ 'success' => false,'message'=>'current password is not correct'], 500);
         }

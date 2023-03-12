@@ -172,11 +172,12 @@ class ArticleController extends Controller
         try{
             DB::beginTransaction();
             $user= Auth::user();
-            $exist = $user->articles()->where('article_id',$request->article_id)->exists();
+            $exist = $user->articles()->whereIn('article_id',$request->articles)->exists();
             if($exist){
                 return response()->json(['success' => false,'message'=>'You cannot buy article twice'], 400);
             }
-            $article = Article::find($request->article_id);   
+            $article = Article::whereIn('article_id',$request->articles)->get();
+            return $articles;
             $paypal_request=[
                 'title'=>$article->title,
                 'price'=>$article->price
@@ -251,5 +252,5 @@ class ArticleController extends Controller
         }
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
-    
+
 }

@@ -19,7 +19,7 @@ trait Paypal {
         $password=\config('paypal.sandbox.secret');
 
            $setopt_content=array(
-                 CURLOPT_URL => \config('paypal.sandbox.base').'/v1/oauth2/token',
+                 CURLOPT_URL => \config('paypal.sandbox.api_base').'/v1/oauth2/token',
                  CURLOPT_HEADER => false,
                  CURLOPT_SSL_VERIFYPEER =>false,
                  CURLOPT_MAXREDIRS => 10,
@@ -49,6 +49,7 @@ trait Paypal {
         try{
             $access_token = $this->paypal_auth();
             $cart_for_paypal=[];
+
                 $cart_for_paypal[]=[
                     'name'=>$request['title'],
                     'price'=>$request['price'],
@@ -85,7 +86,7 @@ trait Paypal {
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_HEADER => false,
-                CURLOPT_URL => \config('paypal.sandbox.base').'/v2/checkout/orders',
+                CURLOPT_URL => \config('paypal.sandbox.api_base').'/v2/checkout/orders',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
@@ -110,7 +111,7 @@ trait Paypal {
         $user=User::find($order->user_id);
         $access_token = $this->paypal_auth();
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, \config('paypal.sandbox.base').'/v2/checkout/orders/'.$token.'/capture');
+        curl_setopt($ch, CURLOPT_URL, \config('paypal.sandbox.api_base').'/v2/checkout/orders/'.$token.'/capture');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
 
@@ -132,7 +133,7 @@ trait Paypal {
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }
     }
-    
+
     public function cancel_payment_article(){
         return redirect()->away(env('APP_URL').'/bag/canceled');
     }
@@ -179,7 +180,7 @@ trait Paypal {
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_HEADER => false,
-                CURLOPT_URL => \config('paypal.sandbox.base').'/v2/checkout/orders',
+                CURLOPT_URL => \config('paypal.sandbox.api_base').'/v2/checkout/orders',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
@@ -203,7 +204,7 @@ trait Paypal {
         $order = PaypalOrder::where('order_id',$token)->first();
         $access_token = $this->paypal_auth();
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, \config('paypal.sandbox.base').'/v2/checkout/orders/'.$token.'/capture');
+        curl_setopt($ch, CURLOPT_URL, \config('paypal.sandbox.api_base').'/v2/checkout/orders/'.$token.'/capture');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
 
@@ -215,7 +216,7 @@ trait Paypal {
         if($result->status == 'COMPLETED'){
         $order->order_status = 'completed';
         $order->save();
-          
+
             return redirect()->away(env('APP_URL').'#/bag/success')->with('success', 'order has captured successfully');
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }else{
