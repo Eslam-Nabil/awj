@@ -170,18 +170,48 @@ class ArticleController extends Controller
     public function buyArticle(Request $request)
     {
         try{
-            DB::beginTransaction();
             $user= Auth::user();
-            $exist = $user->articles()->whereIn('article_id',$request->articles)->exists();
-            if($exist){
-                return response()->json(['success' => false,'message'=>'You cannot buy article twice'], 400);
+            DB::beginTransaction();
+            if($request->has('article_id')){
+                $exist = $user->articles()->where('article_id',$request->article_id)->exists();
+                if($exist){
+                    return response()->json(['success' => false,'message'=>'You cannot buy article twice'], 400);
+                }
+                $article = Article::find($request->article_id);
+                if($article->price == '0.00'){
+                    $isFree = 1;
+                    $data=[
+                        'is_free'=>$isFree,
+                        'price'=>$article->price,
+                        'order_status'=>'completed',
+                    ];
+                    $user->articles()->attach([$request->article_id],$data);
+                    event(new BuyArticle($request->article_id, $user));
+                    DB::commit();
+                    return response()->json(['success' => true,'message'=>'successfully action check projects for tasks'], 200);
+                }else{
+                    return response()->json(['success' => false,'message'=>'This article is not free please add it to bag'], 400);
+                }
             }
-            $article = Article::whereIn('article_id',$request->articles)->get();
-            return $articles;
-            $paypal_request=[
-                'title'=>$article->title,
-                'price'=>$article->price
-            ];
+
+            if($request->has('articles')){
+                $paypal_request=[];
+
+                $exist = $user->articles()->whereIn('article_id',$request->articles)->exists();
+                if($exist){
+                    return response()->json(['success' => false,'message'=>'You cannot buy article twice'], 400);
+                }
+                $total_price=0;
+                $articles = Article::whereIn('id',$request->articles)->get();
+                foreach($articles as $article){
+                    $total_price+=intval($article->price);
+                    $paypal_request[]=[
+                        'title'=>$article->title,
+                        'price'=>$article->price
+                    ];
+                }
+                return $total_price;
+
             if($article->price == '0.00'){
                 $isFree = 1;
                 $data=[
@@ -206,6 +236,7 @@ class ArticleController extends Controller
                 $user->articles()->attach([$request->article_id],$data);
                 DB::commit();
                 return response()->json(['success' => true,'link'=>$order_result->links[1]], 200);
+            }
             }
         }catch(Exception $e){
              return response()->json(['success' => false,'message'=>$e->getMessage()], 400);
