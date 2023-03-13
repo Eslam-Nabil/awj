@@ -201,42 +201,26 @@ class ArticleController extends Controller
                 if($exist){
                     return response()->json(['success' => false,'message'=>'You cannot buy article twice'], 400);
                 }
-                $total_price=0;
+
                 $articles = Article::whereIn('id',$request->articles)->get();
                 foreach($articles as $article){
-                    $total_price+=intval($article->price);
                     $paypal_request[]=[
                         'title'=>$article->title,
                         'price'=>$article->price
                     ];
                 }
-                return $total_price;
-
-            if($article->price == '0.00'){
-                $isFree = 1;
-                $data=[
-                    'is_free'=>$isFree,
-                    'price'=>$article->price,
-                    'order_status'=>'completed',
-                ];
-                $user->articles()->attach([$request->article_id],$data);
-                event(new BuyArticle($request->article_id, $user));
-                DB::commit();
-                return response()->json(['success' => true,'message'=>'successfully action check projects for tasks'], 200);
-            }else{
-                $isFree = 0;
                 $order_result= $this->paypal_order_article($paypal_request);
-                $data=[
-                    'is_free'=>$isFree,
-                    'price'=>$article->price,
-                    'order_status'=>'inProgress',
-                    'order_id'=>$order_result->id
-                ];
-                $user= User::find(Auth::id());
-                $user->articles()->attach([$request->article_id],$data);
-                DB::commit();
-                return response()->json(['success' => true,'link'=>$order_result->links[1]], 200);
-            }
+                foreach($articles as $article){
+                    $data=[
+                        'is_free'=>0,
+                        'price'=>$article->price,
+                        'order_status'=>'inProgress',
+                        'order_id'=>$order_result->id
+                    ];
+                    $user->articles()->attach([$article->id],$data);
+                }
+                    DB::commit();
+                    return response()->json(['success' => true,'link'=>$order_result->links[1]], 200);
             }
         }catch(Exception $e){
              return response()->json(['success' => false,'message'=>$e->getMessage()], 400);

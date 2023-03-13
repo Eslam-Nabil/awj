@@ -49,23 +49,26 @@ trait Paypal {
         try{
             $access_token = $this->paypal_auth();
             $cart_for_paypal=[];
-
+            $total_price=0;
+            foreach($request as $item){
+                $total_price+=intval($item['price']);
                 $cart_for_paypal[]=[
-                    'name'=>$request['title'],
-                    'price'=>$request['price'],
+                    'name'=>$item['title'],
+                    'price'=>$item['price'],
                     'quantity'=>'1',
                     'unit_amount'=>[
                         "currency_code"=> 'USD',
-                        "value"=>$request['price'],
+                        "value"=>$item['price'],
                         ],
                 ];
+            }
             $amount=[
                 "currency_code"=> 'USD',
-                "value"=> $request['price'],
+                "value"=> $total_price,
                 "breakdown"=> [
                     "item_total"=> [
                         "currency_code"=> 'USD',
-                        "value"=> $request['price']
+                        "value"=> $total_price
                     ]
                 ]
             ];
@@ -107,8 +110,8 @@ trait Paypal {
 
     public function capture_payment_article(Request $request){
         $token = $request->token;
-        $order = UserArticle::where('order_id',$token)->first();
-        $user=User::find($order->user_id);
+        $orders = UserArticle::where('order_id',$token)->get();
+        $user=User::find($orders[0]->user_id);
         $access_token = $this->paypal_auth();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, \config('paypal.sandbox.api_base').'/v2/checkout/orders/'.$token.'/capture');
@@ -124,8 +127,10 @@ trait Paypal {
             $data=[
                 'order_status'=>'completed',
             ];
+            foreach( $orders as  $order){
             $user->articles()->updateExistingPivot($order->article_id,$data);
             event(new BuyArticle($order->article_id, $user));
+            }
             return redirect()->away(env('APP_URL').'#/bag/success')->with('success', 'order has captured successfully');
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }else{

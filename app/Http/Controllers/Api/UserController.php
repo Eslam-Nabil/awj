@@ -100,7 +100,7 @@ class UserController extends Controller
     }catch(\Exception $e){
         return response()->json([ 'success' => false,'error'=>$e->getMessage()], 401);
     }
-    return response()->json([ 'success' => true,'data'=>new UserResource($user),'url'=>$order_result->links[1]], 200);
+    return response()->json([ 'success' => true,'data'=>new UserResource($user),'url'=>$order_result->links[1] ?? null], 200);
 }
 
     /**
