@@ -146,7 +146,7 @@ class ArticleController extends Controller
     {
         Config::set('translatable.locale', $lang);
         $user = Auth::user();
-        $articles =  BoughtArticlesResource::collection($user->articles);
+        $articles =  BoughtArticlesResource::collection($user->articles->where('order_status','completed')->get());
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
 
@@ -179,9 +179,8 @@ class ArticleController extends Controller
                 }
                 $article = Article::find($request->article_id);
                 if($article->price == '0.00'){
-                    $isFree = 1;
                     $data=[
-                        'is_free'=>$isFree,
+                        'is_free'=>1,
                         'price'=>$article->price,
                         'order_status'=>'completed',
                     ];
