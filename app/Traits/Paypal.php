@@ -46,6 +46,7 @@ trait Paypal {
 
     public function paypal_order_article($request) {
         header('Content-type: application/json');
+        $rate = $this->currencyConvert();
         try{
             $access_token = $this->paypal_auth();
             $cart_for_paypal=[];
@@ -54,14 +55,15 @@ trait Paypal {
                 $total_price+=intval($item['price']);
                 $cart_for_paypal[]=[
                     'name'=>$item['title'],
-                    'price'=>$item['price'],
+                    'price'=>round($rate*$item['price'],1),
                     'quantity'=>'1',
                     'unit_amount'=>[
                         "currency_code"=> 'USD',
-                        "value"=>$item['price'],
+                        "value"=>round($rate*$item['price'],1),
                         ],
                 ];
             }
+            $total_price= round($rate *$total_price,1);
             $amount=[
                 "currency_code"=> 'USD',
                 "value"=> $total_price,
@@ -145,10 +147,12 @@ trait Paypal {
 
     public function paypal_order_register($request) {
         header('Content-type: application/json');
+        $rate = $this->currencyConvert();
         try{
             $access_token = $this->paypal_auth();
             $cart_for_paypal=[];
             $price=($request->role=='author' ?  100 : 200);
+            $price= round($rate * $price,1);
                 $cart_for_paypal[]=[
                     'name'=>'register new '.$request->role,
                     'price'=>$price,
@@ -221,7 +225,6 @@ trait Paypal {
         if($result->status == 'COMPLETED'){
         $order->order_status = 'completed';
         $order->save();
-
             return redirect()->away(env('APP_URL').'#/bag/success')->with('success', 'order has captured successfully');
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }else{
@@ -229,5 +232,18 @@ trait Paypal {
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
         }
     }
+
+    public function currencyConvert()
+    {
+        $url = 'https://api.exchangerate-api.com/v4/latest/AED';
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($curl);
+        $exp = json_decode($output,true);
+        curl_close($curl);
+        return $exp['rates']['USD'];
+    }
 }
+
 ?>

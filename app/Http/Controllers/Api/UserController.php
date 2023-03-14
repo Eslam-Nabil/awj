@@ -89,6 +89,7 @@ class UserController extends Controller
             $user->assignRole('student');
         }
         $token = $user->createToken('logintoken')->accessToken;
+
         if($request->role=='author' || $request->role=='student' ){
             $order_result = $this->paypal_order_register($request);
             $user->paypalOrder()->create([
@@ -97,10 +98,10 @@ class UserController extends Controller
                 'order_status'=>'failed',
             ]);
         }
+        return response()->json([ 'success' => true,'data'=>new UserResource($user),'url'=>$order_result->links[1] ?? null], 200);
     }catch(\Exception $e){
         return response()->json([ 'success' => false,'error'=>$e->getMessage()], 401);
     }
-    return response()->json([ 'success' => true,'data'=>new UserResource($user),'url'=>$order_result->links[1] ?? null], 200);
 }
 
     /**
