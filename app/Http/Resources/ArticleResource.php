@@ -35,7 +35,7 @@ class ArticleResource extends JsonResource
         'user'=>new UserResource($this->user),
         'sections'=>SectionResource::collection($this->sections),
         'comments'=>CommentsResource::collection($this->comments->where('show',1)),
-        'tasks'=>TasksResource::collection($this->tasks)
+        'tasks'=>TasksResource::collection($this->tasks),
        ];
     }
 }

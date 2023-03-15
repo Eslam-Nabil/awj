@@ -267,4 +267,9 @@ class ArticleController extends Controller
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
 
+    public function attach_certificate()
+    {
+        $user->articles()->updateExistingPivot($order->article_id,$data);
+    }
+
 }
