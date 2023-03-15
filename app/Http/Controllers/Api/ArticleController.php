@@ -146,7 +146,7 @@ class ArticleController extends Controller
     {
         Config::set('translatable.locale', $lang);
         $user = Auth::user();
-        $articles =  BoughtArticlesResource::collection($user->articles->where('order_status','completed')->get());
+        $articles =  BoughtArticlesResource::collection($user->articles->where('pivot.order_status','completed'));
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
 

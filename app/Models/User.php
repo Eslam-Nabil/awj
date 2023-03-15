@@ -83,7 +83,7 @@ class User extends Authenticatable implements TranslatableContract
 
     public function articles()
     {
-        return $this->belongsToMany(Article::class,'user_articles')->withPivot('is_free','order_id','order_status','price','certificate')->withTimestamps();
+        return $this->belongsToMany(Article::class,'user_articles')->withPivot('is_free','order_id','order_status','price'/*,'certificate'*/)->withTimestamps();
     }
     public function tasks()
     {
