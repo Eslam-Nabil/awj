@@ -114,6 +114,7 @@ Route::group(['prefix'=>'article'],function () {
     Route::post('/approve',[ArticleController::class,'approve'])->middleware(['auth:api','role:publisher|admin']);
     Route::post('/delete',[ArticleController::class,'destroy'])->middleware(['auth:api','role:publisher|admin']);
     Route::post('/{lang}/search',[ArticleController::class,'search']);
+    Route::post('/certificate',[ArticleController::class,'attach_certificate'])->middleware(['auth:api','role:reviewer|admin']);
 });
 
 Route::group(['prefix'=>'comment'],function () {

@@ -21,6 +21,7 @@ class CartController extends Controller
             foreach($cart as $item){
                 $article = Article::find($item->article_id);
                 $data []=[
+                        'id'=>$article->id,
                         'title'=>$article->title,
                         'price'=>$article->price,
                         'summary'=>$article->summary,
