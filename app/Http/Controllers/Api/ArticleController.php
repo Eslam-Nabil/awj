@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\CertificateRequest;
+use App\Models\UserArticle;
 use Exception;
 use Carbon\Carbon;
 use App\Models\User;
@@ -266,15 +268,23 @@ class ArticleController extends Controller
         return response()->json(['success' => true,'data'=>$articles], 200);
     }
 
-    public function attach_certificate()
+    public function attach_certificate(CertificateRequest $request)
     {
-        $user->articles()->updateExistingPivot($order->article_id,$data);
-    }
+        try{
+            DB::beginTransaction();
+            $article = UserArticle::where('article_id',$request->article_id)->get();
+            if($request->hasFile('certificate')){
+                $certificate=$this->storeFile($request->certificate,'articles');
+            }
+            $certificate_path= (!empty($certificate) ?  $certificate : null );
+            $article->certificate = $certificate_path;
+            $article->save();
+            DB::commit();
+            return response()->json(['success' => true,'message'=>'certificate added successfully'], 200);
+         }catch(Exception $e){
+             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
+         }
 
-    public function saveCart()
-    {
-        $user->articles()->updateExistingPivot($order->article_id,$data);
     }
-
 
 }
