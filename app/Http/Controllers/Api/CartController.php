@@ -15,6 +15,7 @@ class CartController extends Controller
     public function getUserCart()
     {
         try{
+            $data=[];
             $user=Auth::user();
             $cart=$user->cart;
             foreach($cart as $item){
