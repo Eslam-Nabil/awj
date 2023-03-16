@@ -2,6 +2,7 @@
 use App\Models\SectionType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\UserController;
@@ -90,6 +91,14 @@ Route::group(['prefix'=>'newsletter'],function () {
     Route::get('/all',[NewsLetterController::class,'index'])->middleware(['auth:api','role:admin']);
     Route::post('/register',[NewsLetterController::class,'store']);
     Route::post('/delete',[NewsLetterController::class,'destroy'])->middleware(['auth:api','role:admin']);
+});
+
+Route::group(['prefix'=>'cart'],function () {
+    Route::post('/add',[CartController::class,'addToCart'])->middleware(['auth:api','role:admin|student|author']);
+    Route::get('/',[CartController::class,'getUserCart'])->middleware(['auth:api','role:admin|student|author']);
+    Route::delete('/delete-item',[CartController::class,'deleteFromCart'])->middleware(['auth:api','role:admin|student|author']);
+    Route::delete('/delete',[CartController::class,'deleteAllCart'])->middleware(['auth:api','role:admin|student|author']);
+  //  Route::post('/delete',[CartController::class,'deleteFromCart'])->middleware(['auth:api','role:admin|student|author']);
 });
 
 Route::group(['prefix'=>'article'],function () {

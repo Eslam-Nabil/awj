@@ -64,6 +64,10 @@ class User extends Authenticatable implements TranslatableContract
     {
         return $this->hasMany(Article::class,'user_id');
     }
+    public function cart()
+    {
+        return $this->hasMany(Cart::class,'user_id');
+    }
 
     public function socialmedia()
     {

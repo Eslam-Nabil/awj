@@ -79,9 +79,8 @@ class ArticleController extends Controller
         }else{
             return response()->json(['success' => false,'error'=>'Unauthorized'], 500);
         }
-        // $data=$request->all();
+
         $data=$request->except('task');
-        // $tasks=$data['task'];
         $tasks=$request->task;
         $data['user_id']=$userid;
         $data['serial_number']=time();
@@ -173,7 +172,7 @@ class ArticleController extends Controller
             $user= Auth::user();
             DB::beginTransaction();
             if($request->has('article_id')){
-                $exist = $user->articles()->where('article_id',$request->article_id)->exists();
+                $exist = $user->articles()->where(['article_id'=>$request->article_id,'order_status'=>'completed'])->first();
                 if($exist){
                     return response()->json(['success' => false,'message'=>'You cannot buy article twice'], 400);
                 }
@@ -196,7 +195,7 @@ class ArticleController extends Controller
             if($request->has('articles')){
                 $paypal_request=[];
 
-                $exist = $user->articles()->whereIn('article_id',$request->articles)->exists();
+                $exist = $user->articles()->whereIn('article_id',$request->articles)->where('order_status','completed')->exists();
                 if($exist){
                     return response()->json(['success' => false,'message'=>'You cannot buy article twice'], 400);
                 }
@@ -271,5 +270,11 @@ class ArticleController extends Controller
     {
         $user->articles()->updateExistingPivot($order->article_id,$data);
     }
+
+    public function saveCart()
+    {
+        $user->articles()->updateExistingPivot($order->article_id,$data);
+    }
+
 
 }

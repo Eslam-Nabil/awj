@@ -130,8 +130,10 @@ trait Paypal {
                 'order_status'=>'completed',
             ];
             foreach( $orders as  $order){
-            $user->articles()->updateExistingPivot($order->article_id,$data);
-            event(new BuyArticle($order->article_id, $user));
+                $order->order_status = 'completed';
+                $order->save();
+                $user->articles()->where('order_id',$token)->first();
+                event(new BuyArticle($order->article_id, $user));
             }
             return redirect()->away(env('APP_URL').'#/bag/success')->with('success', 'order has captured successfully');
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);
