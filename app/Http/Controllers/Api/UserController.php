@@ -208,7 +208,7 @@ class UserController extends Controller
             if($ifStudent){
                 return response()->json(['success' => true,'data'=>new UserResource($user)], 200);
             }else{
-                return response()->json(['success' => false,'message'=>'You dont have permission to see this user'], 403);
+                return response()->json(['success' => false,'message'=>'This user is not an author'], 400);
             }
         }catch(Exception $e){
             return response()->json(['success' => false,'message'=>$e->getMessage()], 500);
