@@ -200,12 +200,18 @@ class UserController extends Controller
         return response()->json(['status'=>'200','message'=>"User deleted successfully"]);
     }
 
-    public function test($id)
+    public function showAuthor($id)
     {
-        $user=User::find($id);
-        $data=$user->getAllPermissions();
-
-        return response()->json(['status'=>'200','data'=>$user]);
-
+        try{
+        $user=User::findOrfail($id);
+        $ifStudent = $user->hasRole('author');
+            if($ifStudent){
+                return response()->json(['success' => true,'data'=>new UserResource($user)], 200);
+            }else{
+                return response()->json(['success' => false,'message'=>'You dont have permission to see this user'], 403);
+            }
+        }catch(Exception $e){
+            return response()->json(['success' => false,'message'=>$e->getMessage()], 500);
+        }
     }
 }
