@@ -22,13 +22,13 @@ class SectionController extends Controller
      */
     public function index()
     {
-        $sections=FrontSectionResource::collection(Section::all());
+        $sections=SectionResource::collection(Section::all());
         return response()->json(['success' => true,'data'=>$sections], 200);
     }
     public function front_index($lang)
     {
         Config::set('translatable.locale', $lang);
-        $sections=SectionResource::collection(Section::all());
+        $sections=FrontSectionResource::collection(Section::all());
         return response()->json(['success' => true,'data'=>$sections], 200);
     }
 
