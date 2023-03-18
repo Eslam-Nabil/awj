@@ -18,7 +18,6 @@ class TeamResource extends JsonResource
         'id'=>$this->id,
         'picture_path'=>($this->picture_path ? asset($this->picture_path) : null),
         'name'=>$this->name,
-        'translations'=>$this->translations,
         'title'=>$this->job_title,
        ];
     }
