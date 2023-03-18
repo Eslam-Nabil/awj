@@ -19,6 +19,8 @@ class UserTaskResource extends JsonResource
     {
         return [
             'id'              => $this->id,
+            'article_id'      => $this->article->id,
+            'article_name'    => $this->article->title,
             'title'           => $this->title,
             'description'     => $this->description,
             'task_file'       => $this->file_path ? asset($this->file_path)             : null,
@@ -29,7 +31,6 @@ class UserTaskResource extends JsonResource
             'student_comment' => $this->pivot->student_comment ?? null,
             'status'          => $this->pivot->status ?? null,
             'delay'           => $this->pivot->delay ?? null,
-            // 'comments'        => $this->pivot->comments  ?? null,
             'start_date'      => date('Y-m-d', strtotime($this->pivot->created_at)) ,
             'comments'        =>  TaskCommentResource::collection(TaskComment::where('user_task_id',$this->pivot->id)->get()),
         ];

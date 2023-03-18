@@ -134,6 +134,7 @@ trait Paypal {
                 $order->save();
                 $user->articles()->where('order_id',$token)->first();
                 event(new BuyArticle($order->article_id, $user));
+                $user->cart()->delete();
             }
             return redirect()->away(env('APP_URL').'#/bag/success')->with('success', 'order has captured successfully');
             return response()->json(['success' => true,'message'=>'order captured successfully'], 200);

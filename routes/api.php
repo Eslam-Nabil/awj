@@ -47,15 +47,15 @@ Route::group(['prefix'=>'admin'],function () {
     Route::get('/sections',[SectionController::class,'index'])->middleware(['auth:api','role:admin']);
     Route::post('/section/update/{id}',[SectionController::class,'update'])->middleware(['auth:api','role:admin']);
 
-    Route::get('/{lang}/team/members',[TeamController::class,'index']);
+    Route::get('//team/members',[TeamController::class,'index']);
     Route::post('/team/add',[TeamController::class,'store'])->middleware(['auth:api','role:admin']);
     Route::get('/team/delete/{id}',[TeamController::class,'destroy'])->middleware(['auth:api','role:admin']);
     Route::post('/team/update/{id}',[TeamController::class,'update'])->middleware(['auth:api','role:admin']);
 
-    Route::get('/{lang}/home',[PagesController::class,'home']);
+    Route::get('//home',[PagesController::class,'home']);
     Route::post('/home/update',[PagesController::class,'home_update'])->middleware(['auth:api','role:admin']);
 
-    Route::get('/{lang}/about',[PagesController::class,'about']);
+    Route::get('//about',[PagesController::class,'about']);
     Route::post('/about/update',[PagesController::class,'about_update'])->middleware(['auth:api','role:admin']);
 
     Route::get('/{en}/categories',[PagesController::class,'categories']);
@@ -70,6 +70,14 @@ Route::group(['prefix'=>'admin'],function () {
     Route::get('/languages',[LanguageController::class,'index']);
     ## use only with  developer
     Route::post('/pages/add',[PagesController::class,'add_page'])->middleware(['auth:api','role:admin']);
+});
+
+Route::group(['prefix'=>'front'],function () {
+    Route::get('{lang}/sections',[SectionController::class,'front_index']);
+    Route::get('/{lang}/team/members',[TeamController::class,'front_index']);
+    Route::get('/{lang}/home',[PagesController::class,'front_home']);
+    Route::get('/{lang}/about',[PagesController::class,'front_about']);
+    Route::get('/{lang}/categories',[PagesController::class,'front_categories']);
 });
 
 Route::group(['prefix'=>'task'],function () {

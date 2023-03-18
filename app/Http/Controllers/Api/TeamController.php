@@ -6,9 +6,10 @@ use Exception;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\TeamResource;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\Front\TeamResource as FrontTeamResource;
+use App\Http\Resources\TeamResource;
 
 class TeamController extends Controller
 {
@@ -17,11 +18,15 @@ class TeamController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($lang)
+    public function index()
+    {
+        $data = TeamResource::collection(Team::all());
+        return response()->json(['success'=>true,'data'=>$data],200);
+    }
+    public function front_index($lang)
     {
         Config::set('translatable.locale', $lang);
-        $data = TeamResource::collection(Team::all());
-
+        $data = FrontTeamResource::collection(Team::all());
         return response()->json(['success'=>true,'data'=>$data],200);
     }
 

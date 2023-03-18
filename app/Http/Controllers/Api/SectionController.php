@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Section;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SectionResource;
+use App\Http\Resources\Front\SectionResource as FrontSectionResource;
 use App\Models\Article;
 use App\Models\Pages;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +20,12 @@ class SectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($lang)
+    public function index()
+    {
+        $sections=FrontSectionResource::collection(Section::all());
+        return response()->json(['success' => true,'data'=>$sections], 200);
+    }
+    public function front_index($lang)
     {
         Config::set('translatable.locale', $lang);
         $sections=SectionResource::collection(Section::all());

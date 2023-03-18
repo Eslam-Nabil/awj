@@ -20,7 +20,7 @@ class ContactusController extends Controller
         $contact = new ContactusResource(Contactus::first()) ?? [];
         return response()->json(['success'=>true,'data'=>$contact],200);
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *

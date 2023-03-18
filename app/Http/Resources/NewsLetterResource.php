@@ -15,6 +15,7 @@ class NewsLetterResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id'=>$this->id,
             'email'=>$this->email,
             'signed_at'=>date('Y-m-d', strtotime($this->created_at))
         ];

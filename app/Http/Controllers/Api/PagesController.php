@@ -11,7 +11,9 @@ use App\Models\HomePage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PageResource;
+use App\Http\Resources\Front\PageResource as FrontPageResource ;
 use App\Http\Resources\TeamResource;
+use App\Http\Resources\Front\TeamResource as FrontTeamResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\ArticleResource;
 use Astrotomic\Translatable\Validation\RuleFactory;
@@ -20,9 +22,13 @@ use Illuminate\Support\Facades\Config;
 class PagesController extends Controller
 {
 
-    public function home($lang){
-        Config::set('translatable.locale', $lang);
+    public function home(){
         $page_data=new PageResource(Pages::where('id',1)->with('sections')->first());
+        return response()->json(['success' => true,'data'=>$page_data], 200);
+    }
+    public function front_home($lang){
+        Config::set('translatable.locale', $lang);
+        $page_data=new FrontPageResource(Pages::where('id',1)->with('sections')->first());
         return response()->json(['success' => true,'data'=>$page_data], 200);
     }
 
@@ -52,11 +58,16 @@ class PagesController extends Controller
         return response()->json(['success' => true,'data'=>new PageResource($page)], 200);
     }
 
-    public function about($lang){
+    public function about(){
 
-        Config::set('translatable.locale', $lang);
         $page_data['about_page']=new PageResource(Pages::where('id',2)->with('sections')->first());
         $page_data['team']=TeamResource::collection(Team::all());
+        return response()->json(['success' => true,'data'=>$page_data], 200);
+    }
+    public function front_about($lang){
+        Config::set('translatable.locale', $lang);
+        $page_data['about_page']=new FrontPageResource(Pages::where('id',2)->with('sections')->first());
+        $page_data['team']=FrontTeamResource::collection(Team::all());
         return response()->json(['success' => true,'data'=>$page_data], 200);
     }
 
@@ -88,9 +99,14 @@ class PagesController extends Controller
                 }
             return response()->json(['success' => true,'data'=>new PageResource($page)], 200);
     }
-    public function categories($lang){
-        Config::set('translatable.locale', $lang);
+    public function categories(){
         $page_data['categories_page']=new PageResource(Pages::where('id',3)->with('sections')->first());
+        // $page_data['team']=TeamResource::collection(Team::all());
+        return response()->json(['success' => true,'data'=>$page_data], 200);
+    }
+    public function front_categories($lang){
+        Config::set('translatable.locale', $lang);
+        $page_data['categories_page']=new FrontPageResource(Pages::where('id',3)->with('sections')->first());
         // $page_data['team']=TeamResource::collection(Team::all());
         return response()->json(['success' => true,'data'=>$page_data], 200);
     }
