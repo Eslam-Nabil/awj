@@ -18,7 +18,7 @@ class CommentsResource extends JsonResource
             'id'=>$this->id,
             'comment'=>$this->comment_text,
             'user'=>$this->user->name,
-            'article'=>$this->article->title,
+            'article'=>$this->article->title ?? null,
             'isApproved'=>boolval($this->show),
         ];
     }
