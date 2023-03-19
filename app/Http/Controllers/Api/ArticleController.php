@@ -11,6 +11,7 @@ use App\Traits\Paypal;
 use App\Models\Article;
 use App\Events\BuyArticle;
 use App\Traits\UploadFile;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
@@ -272,13 +273,15 @@ class ArticleController extends Controller
     {
         try{
             DB::beginTransaction();
-            $article = UserArticle::where('article_id',$request->article_id)->get();
+            $user = User::find($request->user_id);
+            $article = $user->articles()->wherePivot('order_status','completed')->wherePivot('article_id',$request->article_id)->first();
+            //return $article;
             if($request->hasFile('certificate')){
                 $certificate=$this->storeFile($request->certificate,'articles');
             }
             $certificate_path= (!empty($certificate) ?  $certificate : null );
-            $article->certificate = $certificate_path;
-            $article->save();
+            $article->pivot->certificate = $certificate ;
+            $article->pivot->save();
             DB::commit();
             return response()->json(['success' => true,'message'=>'certificate added successfully'], 200);
          }catch(Exception $e){
