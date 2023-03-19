@@ -51,6 +51,6 @@ class Article extends Model implements TranslatableContract
 
    public function users()
    {
-       return $this->belongsToMany(User::class,'user_articles',)->withPivot('is_free','order_id','order_status','price'/*,'certificate'*/   )->withTimestamps();
+       return $this->belongsToMany(User::class,'user_articles',)->withPivot('is_free','order_id','order_status','price','certificate')->withTimestamps();
    }
 }
