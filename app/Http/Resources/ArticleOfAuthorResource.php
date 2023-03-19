@@ -17,7 +17,7 @@ class ArticleOfAuthorResource extends JsonResource
         return[
             'id'=>$this->id,
             'serial_number'=>$this->serial_number,
-            'article_file_path'=>asset($this->article_file_path),
+            'article_file_path'=>$this->article_file,
             'description'=>$this->description,
             'category_id'=>$this->category_id,
             'price'=>$this->price,

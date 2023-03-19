@@ -53,4 +53,8 @@ class Article extends Model implements TranslatableContract
    {
        return $this->belongsToMany(User::class,'user_articles',)->withPivot('is_free','order_id','order_status','price','certificate')->withTimestamps();
    }
+   public function getArticleFileAttribute()
+    {
+        return asset('articles/'.$this->article_file_path);
+    }
 }
