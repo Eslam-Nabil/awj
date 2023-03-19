@@ -31,7 +31,8 @@ class BoughtArticlesResource extends JsonResource
             'description'=>$this->description,
             'summary'=>$this->summary,
             'language'=>$this->language,
+            'certificate'=>$user->articles()->wherePivot('order_status','completed')->wherePivot('article_id',$this->id)->first()->certificate,
             'tasks'=>UserTaskResource::collection($user->tasks->where('article_id',$this->id)),
-           ];
+        ];
     }
 }
