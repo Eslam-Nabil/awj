@@ -289,7 +289,7 @@ class ArticleController extends Controller
          }
 
     }
-    public function get_certificate(CertificateRequest $request)
+    public function get_certificate(Request $request)
     {
         try{
             $user = Auth::user();
