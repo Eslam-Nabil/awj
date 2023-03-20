@@ -26,6 +26,7 @@ class UserResource extends JsonResource
             'role'=>$this->roles[0]->name,
             'articles'=>$this->article,
             //'articles'=>$this->whenLoaded('article', fn () => ArticleOfAuthorResource::collection($this->article)),
+            //'articles'=>$this->whenLoaded('article', ArticleOfAuthorResource::collection($this->article)),
             'status'=>$this->paypalOrder->where('type','register')->first()->order_status ?? null
       ];
 
