@@ -55,6 +55,10 @@ class Article extends Model implements TranslatableContract
    }
    public function getArticleFileAttribute()
     {
-        return asset('articles/'.$this->article_file_path);
+        return asset($this->article_file_path);
+    }
+   public function getArticleCoverAttribute()
+    {
+        return asset($this->cover_file_path);
     }
 }
