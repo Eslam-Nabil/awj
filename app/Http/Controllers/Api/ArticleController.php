@@ -294,7 +294,8 @@ class ArticleController extends Controller
         try{
             $user = Auth::user();
             $article = $user->articles()->wherePivot('order_status','completed')->wherePivot('article_id',$request->article_id)->first();
-            return response()->json(['success' => true,'data'=>asset($article->pivot->certificate)], 200);
+            $certificate = asset($article->pivot->certificate) ?? null;
+            return response()->json(['success' => true,'data'=>$certificate], 200);
          }catch(Exception $e){
              return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
          }
