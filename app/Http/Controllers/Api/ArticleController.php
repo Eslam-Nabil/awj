@@ -289,5 +289,16 @@ class ArticleController extends Controller
          }
 
     }
+    public function get_certificate(CertificateRequest $request)
+    {
+        try{
+            $user = Auth::user();
+            $article = $user->articles()->wherePivot('order_status','completed')->wherePivot('article_id',$request->article_id)->first();
+            return response()->json(['success' => true,'data'=>asset($article->pivot->certificate)], 200);
+         }catch(Exception $e){
+             return response()->json(['success' => false,'error'=>$e->getMessage()], 500);
+         }
+
+    }
 
 }
